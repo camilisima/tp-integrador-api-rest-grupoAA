@@ -1,0 +1,19 @@
+GET http://localhost:3000/api/salones
+
+###
+//prueba para agregar un nuevo salon
+POST http://localhost:3000/api/salones
+Content-Type: application/json
+
+{
+    "titulo": "Salón nuevo",
+    "direccion": "Condarco 1090",
+    "latitud": null, 
+    "longitud": null,
+    "capacidad": 110,
+    "importe": 90000.00
+}
+
+###
+//prueba para eliminar salon por su ID
+DELETE http://localhost:3000/api/salones/14
