@@ -8,7 +8,7 @@ export const getAllSalones = async () => {
 
 // Obtener un salón por ID 
 export const getSalonById = async (id) => {
-  const [rows] = await pool.query ('SELECT * FROM salones WHERE salon_id = ?', [id]);
+  const [rows] = await pool.query ('SELECT * FROM salones WHERE salon_id = ? AND activo = 1', [id]);
   return rows[0];
 };
 
@@ -17,8 +17,8 @@ export const getSalonById = async (id) => {
 export const createSalon = async (salon) => {
   const { titulo, direccion, latitud, longitud, capacidad, importe } = salon;
   const sql = `
-    INSERT INTO salones (titulo, direccion, latitud, longitud, capacidad, importe)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO salones (titulo, direccion, latitud, longitud, capacidad, importe, activo)
+    VALUES (?, ?, ?, ?, ?, ?, 1)
   `;
   const [result] = await pool.query(sql, [titulo, direccion, latitud, longitud, capacidad, importe]);
   return result.insertId;
@@ -30,7 +30,7 @@ export const updateSalon = async (id, salon) => {
   const sql = `
     UPDATE salones
     SET titulo = ?, direccion = ?, latitud = ?, longitud = ?, capacidad = ?, importe = ?, modificado = CURRENT_TIMESTAMP
-    WHERE salon_id = ?
+    WHERE salon_id = ? AND activo = 1
   `;
   const [result] = await pool.query(sql, [titulo, direccion, latitud, longitud, capacidad, importe, id]);
   return result.affectedRows;
