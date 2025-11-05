@@ -4,10 +4,18 @@ import dotenv from 'dotenv';
 import salonesRutas from './rutas/salonesrutas.js';
 import pool from './datos/basededatos.js';
 import authRutas from './rutas/authRutas.js';
+import turnosRutas from './rutas/turnosRutas.js';
+import reservasRutas from './rutas/reservasrutas.js';
+import serviciosRutas from './rutas/serviciosrutas.js';
+import usuariosRutas from './rutas/usuariosRutas.js';
 
 dotenv.config(); //cargar variables de entorno
 
 const app = express(); // declaramos app
+dotenv.config(); 
+
+const app = express();
+
 
 // middlewares
 app.use(cors());
@@ -16,6 +24,12 @@ app.use(express.json());
 // rutas
 app.use('/api/auth', authRutas);
 app.use('/api/salones', salonesRutas);
+app.use('/api/turnos', turnosRutas);
+app.use('/api/reservas', reservasRutas);
+app.use('/api/servicios', serviciosRutas);
+app.use('/api/usuarios', usuariosRutas);
+
+
 
 // ruta de prueba
 app.get('/api/ping', (req, res) => {
@@ -23,6 +37,7 @@ app.get('/api/ping', (req, res) => {
 });
 
 // probar la base de datos
+
 async function probarDB() {
   try {
     const connection = await pool.getConnection();
@@ -41,8 +56,10 @@ async function probarDB() {
 }
 
 // arrancamos el servidor
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
   probarDB(); // ejecutamos la prueba de conexión
+  probarDB(); 
 });
