@@ -1,91 +1,84 @@
 import pool from '../datos/basededatos.js';
 
-//Obtener todas las reservas activas 
-//Todas las resevas 
+// Admin/Empleado: listar todas las reservas activas
 export const getAllReservas = async () => {
-    const sql = `SELECT * FROM reservas WHERE activo = 1`;
-    const [rows] = await pool.query(sql);
-    return rows;
+  const [rows] = await pool.query(
+    'SELECT * FROM reservas WHERE activo = 1 ORDER BY reserva_id DESC'
+  );
+  return rows;
 };
 
-//Obtener una reserva por ID 
-//Busca por ID
+// Admin/Empleado: reservar por ID
 export const getReservaById = async (id) => {
-    const sql = `SELECT * FROM reservas WHERE reserva_id = ? AND activo = 1`;
-    const [rows] = await pool.query(sql, [id]);
-    return rows[0];
+  const [rows] = await pool.query(
+    'SELECT * FROM reservas WHERE reserva_id = ? AND activo = 1',
+    [Number(id)]
+  );
+  return rows[0];
 };
 
-//Crear una nueva reserva 
-//Nueva reserva
-export const createReserva = async (reserva) => {
-    const { fecha_reserva, usuario_id, salon_id } = reserva; 
-    const sql = `
-        INSERT INTO reservas (fecha_reserva, usuario_id, salon_id, activo) 
-        VALUES (?, ?, ?, 1)
-    `;
-    const [result] = await pool.query(sql, [fecha_reserva, usuario_id, salon_id]);
-    return result.insertId;
-  const {fecha_reserva,usuario_id,salon_id,turno_id,tematica = null,importe_salon = null,importe_total = null,foto_cumpleaniero = null
-  } = reserva;
+// Cliente: crear su reserva
+export const crearReservaCliente = async (data) => {
+  const {
+    usuario_id, salon_id, turno_id, fecha_reserva,
+    tematica = null, importe_salon = null, importe_total = null, foto_cumpleaniero = null
+  } = data;
 
   const sql = `
     INSERT INTO reservas
-      (fecha_reserva, usuario_id, salon_id, turno_id, tematica, importe_salon, importe_total, foto_cumpleaniero, activo)
-    VALUES
-      (?, ?, ?, ?, ?, ?, ?, ?, 1)
+      (fecha_reserva, salon_id, usuario_id, turno_id, tematica,
+       importe_salon, importe_total, foto_cumpleaniero, activo)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
   `;
+  const params = [
+    fecha_reserva, Number(salon_id), Number(usuario_id), Number(turno_id),
+    tematica, importe_salon != null ? Number(importe_salon) : null,
+    importe_total != null ? Number(importe_total) : null,
+    foto_cumpleaniero
+  ];
 
-  const [result] = await pool.query(sql, [fecha_reserva,usuario_id,salon_id,turno_id,tematica,importe_salon,importe_total,foto_cumpleaniero
-  ]);
-
-  return result.insertId;
+  const [r] = await pool.query(sql, params);
+  return r.insertId;
 };
 
-//Actualizar una reserva existente
-
-//Actualizar
-export const updateReserva = async (id, reserva) => {
-    const { fecha_reserva, usuario_id, salon_id } = reserva;
-    const sql = `
-        UPDATE reservas 
-        SET fecha_reserva = ?, usuario_id = ?, salon_id = ?, modificado = CURRENT_TIMESTAMP
-        WHERE reserva_id = ? AND activo = 1
-    `; 
-    const [result] = await pool.query(sql, [fecha_reserva, usuario_id, salon_id, id]);
-    return result.affectedRows;
-  const {fecha_reserva,usuario_id,salon_id,turno_id,tematica = null,importe_salon = null,importe_total = null,foto_cumpleaniero = null
-  } = reserva;
-
-  const sql = `
-    UPDATE reservas
-    SET
-      fecha_reserva   = ?,
-      usuario_id      = ?,
-      salon_id        = ?,
-      turno_id        = ?,
-      tematica        = ?,
-      importe_salon   = ?,
-      importe_total   = ?,
-      foto_cumpleaniero = ?,
-      modificado      = CURRENT_TIMESTAMP
-    WHERE reserva_id = ? AND activo = 1
-  `;
-
-  const [result] = await pool.query(sql, [fecha_reserva,usuario_id,salon_id,turno_id,tematica,importe_salon,importe_total,foto_cumpleaniero,
-    id
-  ]);
-
-  return result.affectedRows;
+// Cliente: listar MIS reservas (por token.user)
+export const getReservasByUsuario = async (usuario_id) => {
+  const [rows] = await pool.query(
+    'SELECT * FROM reservas WHERE usuario_id = ? AND activo = 1 ORDER BY reserva_id DESC',
+    [Number(usuario_id)]
+  );
+  return rows;
 };
 
-//Soft Delete
+// Admin: update flexible
+export const updateReserva = async (id, data) => {
+  const setParts = [];
+  const values = [];
+
+  for (const [k, v] of Object.entries(data)) {
+    setParts.push(`${k} = ?`);
+    if (['usuario_id','salon_id','turno_id'].includes(k)) {
+      values.push(Number(v));
+    } else if (['importe_salon','importe_total'].includes(k)) {
+      values.push(v != null ? Number(v) : null);
+    } else {
+      values.push(v ?? null);
+    }
+  }
+  setParts.push('modificado = CURRENT_TIMESTAMP');
+
+  const sql = `UPDATE reservas SET ${setParts.join(', ')} WHERE reserva_id = ? AND activo = 1`;
+  values.push(Number(id));
+
+  const [r] = await pool.query(sql, values);
+  return r.affectedRows;
+};
+
+// Admin: baja lógica
 export const deleteReserva = async (id) => {
-    const sql = `
-        UPDATE reservas 
-        SET activo = 0 
-        WHERE reserva_id = ?
-    `;
-    const [result] = await pool.query(sql, [id]);
-    return result.affectedRows;
+  const [r] = await pool.query(
+    'UPDATE reservas SET activo = 0, modificado = CURRENT_TIMESTAMP WHERE reserva_id = ?',
+    [Number(id)]
+  );
+  return r.affectedRows;
 };

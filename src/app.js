@@ -8,18 +8,40 @@ import turnosRutas from './rutas/turnosRutas.js';
 import reservasRutas from './rutas/reservasrutas.js';
 import serviciosRutas from './rutas/serviciosrutas.js';
 import usuariosRutas from './rutas/usuariosRutas.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 
 dotenv.config(); //cargar variables de entorno
 
 const app = express(); // declaramos app
 dotenv.config(); 
 
-const app = express();
+
 
 
 // middlewares
 app.use(cors());
 app.use(express.json());
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API Reservas',
+      version: '1.0.0',
+      description: 'Documentación de la API REST del sistema de reservas de salones y servicios',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000/api',
+        description: 'Servidor local',
+      },
+    ],
+  },
+  apis: ['./src/rutas/*.js'], 
+};
+
+const swaggerSpecs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // rutas
 app.use('/api/auth', authRutas);
