@@ -1,3 +1,4 @@
+import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import * as usrv from '../servicios/usuariosServicios.js';
 
@@ -7,6 +8,10 @@ export const getClientes = async (_req,res)=>{ try{ res.json(await usrv.getClien
 
 export const createUsuario = async (req,res)=>{
   try{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+      }
     const { nombre, apellido, nombre_usuario, contrasenia, tipo_usuario, celular, foto } = req.body;
     const contrasenia_hash = bcrypt.hashSync(contrasenia, 10);
     const id = await usrv.createUsuario({ nombre, apellido, nombre_usuario, contrasenia_hash, tipo_usuario, celular, foto });
@@ -16,6 +21,10 @@ export const createUsuario = async (req,res)=>{
 
 export const updateUsuario = async (req,res)=>{
   try{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+      }
     const data = { ...req.body };
     if (data.contrasenia) {
       data.contrasenia_hash = bcrypt.hashSync(data.contrasenia, 10);
@@ -29,6 +38,10 @@ export const updateUsuario = async (req,res)=>{
 
 export const deleteUsuario = async (req,res)=>{
   try{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+      }
     const ok = await usrv.deleteUsuario(req.params.id);
     if (!ok) return res.status(404).json({message:'Usuario no encontrado'});
     res.json({ deleted: ok });

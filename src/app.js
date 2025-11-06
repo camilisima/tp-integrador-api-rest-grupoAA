@@ -1,6 +1,7 @@
+import dotenv from 'dotenv';
+dotenv.config(); //cargar variables de entorno
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import salonesRutas from './rutas/salonesrutas.js';
 import pool from './datos/basededatos.js';
 import authRutas from './rutas/authRutas.js';
@@ -10,8 +11,12 @@ import serviciosRutas from './rutas/serviciosrutas.js';
 import usuariosRutas from './rutas/usuariosRutas.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import estadisticasRutas from './rutas/estadisticasRutas.js';
+import reportesRutas from './rutas/reportesRutas.js';
+import comentariosRutas from './rutas/comentariosRutas.js';
 
-dotenv.config(); //cargar variables de entorno
+
+
 
 const app = express(); // declaramos app
 dotenv.config(); 
@@ -50,6 +55,9 @@ app.use('/api/turnos', turnosRutas);
 app.use('/api/reservas', reservasRutas);
 app.use('/api/servicios', serviciosRutas);
 app.use('/api/usuarios', usuariosRutas);
+app.use('/api/estadisticas', estadisticasRutas);
+app.use('/api/reportes', reportesRutas);
+app.use('/api/comentarios', comentariosRutas);
 
 
 
