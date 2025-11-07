@@ -11,4 +11,5 @@ export const options = {
     ],
   },
   apis: ['./src/rutas/*.js'], // 👈 rutas donde están los @swagger
+  apis: ['./src/rutas/*.js'],
 };

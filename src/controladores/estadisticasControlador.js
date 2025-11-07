@@ -7,5 +7,7 @@ export const obtenerEstadisticas = async (_req, res) => {
   } catch (error) {
     console.error('Error al obtener estadísticas:', error);
     res.status(500).json({ message: 'Error al obtener estadísticas' });
+    console.error('Error al obtener estadisticas:', error);
+    res.status(500).json({ message: 'Error al obtener estadisticas' });
   }
 };

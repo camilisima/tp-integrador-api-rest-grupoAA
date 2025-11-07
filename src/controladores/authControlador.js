@@ -17,6 +17,7 @@ export const login = async (req, res) => {
     let ok = false;
 
     // 1) bcrypt primero
+ 
     if (stored.startsWith('$2a$') || stored.startsWith('$2b$')) {
       ok = bcrypt.compareSync(contrasenia, stored);
     }

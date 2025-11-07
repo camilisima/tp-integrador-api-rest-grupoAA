@@ -6,6 +6,7 @@ async function testConnection() {
     console.log('Conexión OK:', rows);
   } catch (err) {
     console.error('Error de conexión:', err);
+    console.error('Error de conexion:', err);
   }
 }
 

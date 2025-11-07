@@ -4,6 +4,7 @@ import { Parser } from 'json2csv';
 import fs from 'fs';
 
 // 📄 Generar PDF de reservas
+//Generador de reservas pdf
 export const generarPDFReservas = async () => {
   const [reservas] = await pool.query(`
     SELECT r.reserva_id, r.fecha_reserva, u.nombre AS cliente, s.titulo AS salon, r.importe_total
@@ -27,6 +28,7 @@ export const generarPDFReservas = async () => {
       .text(`ID: ${r.reserva_id}`)
       .text(`Cliente: ${r.cliente}`)
       .text(`Salón: ${r.salon}`)
+      .text(`Salon: ${r.salon}`)
       .text(`Fecha: ${r.fecha_reserva}`)
       .text(`Importe Total: $${r.importe_total}`)
       .moveDown();
@@ -37,6 +39,7 @@ export const generarPDFReservas = async () => {
 };
 
 // 📊 Generar CSV de reservas
+//Generador cvs de reservas
 export const generarCSVReservas = async () => {
   const [reservas] = await pool.query(`
     SELECT r.reserva_id, r.fecha_reserva, u.nombre AS cliente, s.titulo AS salon, r.importe_total

@@ -1,6 +1,7 @@
 import pool from '../datos/basededatos.js';
 
 //Obtener todos los turnos activos
+
 //Turnos
 export const getAllTurnos = async () => {
     const sql = `SELECT * FROM turnos WHERE activo = 1`;

@@ -13,6 +13,7 @@ const router = express.Router();
  */
 
 // 🔹 Obtener todos los comentarios de una reserva
+//Todos los comentarios de uan reserva
 router.get(
   '/reserva/:reserva_id',
   requireAuth,
@@ -21,6 +22,7 @@ router.get(
 );
 
 // 🔹 Crear un comentario (solo empleado o admin)
+//Nuevo comentario(empleado o admin)
 router.post(
   '/',
   requireAuth,
@@ -33,6 +35,7 @@ router.post(
 );
 
 // 🔹 Borrado lógico del comentario
+//Borrar comentario
 router.delete(
   '/:id',
   requireAuth,
@@ -44,4 +47,5 @@ router.delete(
 export default router;
 
 // 🔹 Listar todos los comentarios activos
+//Todos los comentarios activos
 router.get('/', requireAuth, empleadoOAdmin, comentariosCtrl.getComentariosActivos);

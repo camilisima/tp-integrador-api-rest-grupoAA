@@ -153,6 +153,7 @@ const validateUpdate = [
 ];
 
 // Cliente
+
 router.get('/mias', requireAuth, reservasControlador.listarMias);
 router.post('/', requireAuth, validateCreate, reservasControlador.crearReservaCliente);
 

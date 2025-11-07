@@ -1,6 +1,7 @@
 import pool from '../datos/basededatos.js';
 
 // usuarios activos (sin exponer hash)
+//todos los usuariois
 export const getAllUsuarios = async () => {
   const [rows] = await pool.query(
     `SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto, activo, creado, modificado
@@ -12,6 +13,7 @@ export const getAllUsuarios = async () => {
 };
 
 // usuario por ID (activo)
+// usuario por ID
 export const getUsuarioById = async (id) => {
   const [rows] = await pool.query(
     `SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto, activo, creado, modificado
@@ -34,6 +36,7 @@ export const getClientes = async () => {
 };
 
 // crear usuario (recibe contrasenia_hash YA en bcrypt)
+// crear usuario (contrasenia_hash YA en bcrypt)
 export const createUsuario = async (usuario) => {
   const {
     nombre = null,

@@ -1,6 +1,7 @@
 import pool from '../datos/basededatos.js';
 
 // Admin/Empleado: listar todas las reservas activas
+// Reservas activas
 export const getAllReservas = async () => {
   const [rows] = await pool.query(
     'SELECT * FROM reservas WHERE activo = 1 ORDER BY reserva_id DESC'
@@ -9,6 +10,7 @@ export const getAllReservas = async () => {
 };
 
 // Admin/Empleado: reservar por ID
+//Reserva por ID 
 export const getReservaById = async (id) => {
   const [rows] = await pool.query(
     'SELECT * FROM reservas WHERE reserva_id = ? AND activo = 1',
@@ -18,6 +20,7 @@ export const getReservaById = async (id) => {
 };
 
 // Cliente: crear su reserva
+// Crear reserva (Es para el cliente)
 export const crearReservaCliente = async (data) => {
   const {
     usuario_id, salon_id, turno_id, fecha_reserva,
@@ -42,6 +45,7 @@ export const crearReservaCliente = async (data) => {
 };
 
 // Cliente: listar MIS reservas (por token.user)
+// Las reservas del cliente
 export const getReservasByUsuario = async (usuario_id) => {
   const [rows] = await pool.query(
     'SELECT * FROM reservas WHERE usuario_id = ? AND activo = 1 ORDER BY reserva_id DESC',
@@ -51,6 +55,7 @@ export const getReservasByUsuario = async (usuario_id) => {
 };
 
 // Admin: update flexible
+// Update (admin)
 export const updateReserva = async (id, data) => {
   const setParts = [];
   const values = [];
@@ -75,6 +80,7 @@ export const updateReserva = async (id, data) => {
 };
 
 // Admin: baja lógica
+// Baja (admin)
 export const deleteReserva = async (id) => {
   const [r] = await pool.query(
     'UPDATE reservas SET activo = 0, modificado = CURRENT_TIMESTAMP WHERE reserva_id = ?',

@@ -1,6 +1,7 @@
 import pool from '../datos/basededatos.js';
 
 //Obtener todos los servicios activos
+
 //Todo los servicios
 export const getAllServicios = async () => {
     const sql = `SELECT * FROM servicios WHERE activo = 1`;
@@ -10,6 +11,8 @@ export const getAllServicios = async () => {
 
 //Obtener un servicio por ID
 //Buuscar por ID
+
+//Buscar por ID
 export const getServicioById = async (id) => {
     const sql = `SELECT * FROM servicios WHERE servicio_id = ? AND activo = 1`;
     const [rows] = await pool.query(sql, [id]);
@@ -17,6 +20,7 @@ export const getServicioById = async (id) => {
 };
 
 //Crear un nuevo servicio
+
 //Crear nuevo servicio
 export const createServicio = async (servicio) => {
     const {descripcion, importe } = servicio;
@@ -29,6 +33,7 @@ export const createServicio = async (servicio) => {
 };
 
 //Actualizar un servicio existente
+
 //Actualizar servicio
 export const updateServicio = async (id, servicio) => {
     const {descripcion, importe } = servicio;

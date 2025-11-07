@@ -2,6 +2,7 @@ import * as comentariosSrv from '../servicios/comentariosServicios.js';
 import { validationResult } from 'express-validator';
 
 // 🔹 Listar comentarios de una reserva
+// Todos los comentarios de reservas
 export const getComentariosPorReserva = async (req, res) => {
   try {
     const { reserva_id } = req.params;
@@ -13,6 +14,7 @@ export const getComentariosPorReserva = async (req, res) => {
 };
 
 // 🔹 Crear un nuevo comentario
+//Nuevo comentario
 export const crearComentario = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -22,6 +24,7 @@ export const crearComentario = async (req, res) => {
 
     const { reserva_id, texto } = req.body;
     const usuario_id = req.user.usuario_id; // del token JWT
+    const usuario_id = req.user.usuario_id; 
     const id = await comentariosSrv.crearComentario({ reserva_id, usuario_id, texto });
     res.status(201).json({ id });
   } catch (error) {
@@ -31,6 +34,7 @@ export const crearComentario = async (req, res) => {
 };
 
 // 🔹 Eliminar (borrado lógico)
+//Eliminar comentario
 export const deleteComentario = async (req, res) => {
   try {
     const { id } = req.params;

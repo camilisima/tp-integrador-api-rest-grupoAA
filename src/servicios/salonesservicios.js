@@ -1,6 +1,7 @@
 import pool from '../datos/basededatos.js';
 
 // todos los salones activos
+//Todos los salones
 export const getAllSalones = async () => {
   const [rows] = await pool.query(
     'SELECT * FROM salones WHERE activo = 1 ORDER BY creado DESC'
@@ -9,6 +10,7 @@ export const getAllSalones = async () => {
 };
 
 // obtener un salón por ID
+//Buscar por ID
 export const getSalonById = async (id) => {
   const [rows] = await pool.query(
     'SELECT * FROM salones WHERE salon_id = ? AND activo = 1',
@@ -18,6 +20,7 @@ export const getSalonById = async (id) => {
 };
 
 //crear un nuevo salón
+//Crear nuevo salon
 export const createSalon = async (salon) => {
   const { titulo, direccion, latitud, longitud, capacidad, importe } = salon;
   const sql = `
@@ -53,6 +56,7 @@ export const updateSalon = async (id, salon) => {
     id,
   ]);
   return result.affectedRows; // 1 si actualizó, 0 si no encontró
+  return result.affectedRows; 
 };
 
 export const deleteSalon = async (id) => {
