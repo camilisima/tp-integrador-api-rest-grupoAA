@@ -2,10 +2,10 @@ import pool from '../datos/basededatos.js';
 import PDFDocument from 'pdfkit';
 import { Parser } from 'json2csv';
 import fs from 'fs';
+import path from 'path';
 
-// Generar PDF de reservas
-//generador de reservas pdf
 export const generarPDFReservas = async () => {
+  // Consultar reservas activas
   const [reservas] = await pool.query(`
     SELECT r.reserva_id, r.fecha_reserva, u.nombre AS cliente, s.titulo AS salon, r.importe_total
     FROM reservas r
@@ -14,33 +14,50 @@ export const generarPDFReservas = async () => {
     WHERE r.activo = 1;
   `);
 
-  const doc = new PDFDocument();
-  const rutaArchivo = './reportes/reservas.pdf';
+  // Rutas de carpeta y archivo
+  const rutaCarpeta = path.resolve('./reportes');
+  const rutaArchivo = path.join(rutaCarpeta, 'reservas.pdf');
+
+  // ✅ Crear carpeta si no existe
+  if (!fs.existsSync(rutaCarpeta)) {
+    fs.mkdirSync(rutaCarpeta, { recursive: true });
+  }
+
+  // Crear documento PDF
+  const doc = new PDFDocument({ margin: 40 });
   const stream = fs.createWriteStream(rutaArchivo);
   doc.pipe(stream);
 
+  // Encabezado
   doc.fontSize(18).text('Reporte de Reservas', { align: 'center' });
   doc.moveDown();
+  doc.fontSize(12).text(`Generado el: ${new Date().toLocaleString()}`);
+  doc.moveDown();
 
+  // Contenido
   reservas.forEach((r) => {
     doc
       .fontSize(12)
       .text(`ID: ${r.reserva_id}`)
       .text(`Cliente: ${r.cliente}`)
       .text(`Salón: ${r.salon}`)
-      .text(`Salon: ${r.salon}`)
       .text(`Fecha: ${r.fecha_reserva}`)
       .text(`Importe Total: $${r.importe_total}`)
       .moveDown();
   });
 
+  // Cerrar documento
   doc.end();
-  return rutaArchivo;
+
+  // Esperar a que el PDF termine de generarse
+  return new Promise((resolve, reject) => {
+    stream.on('finish', () => resolve(rutaArchivo));
+    stream.on('error', (err) => reject(err));
+  });
 };
 
-// Generar CSV de reservas
-//Generador cvs de reservas
 export const generarCSVReservas = async () => {
+  // Consultar reservas activas
   const [reservas] = await pool.query(`
     SELECT r.reserva_id, r.fecha_reserva, u.nombre AS cliente, s.titulo AS salon, r.importe_total
     FROM reservas r
@@ -49,9 +66,20 @@ export const generarCSVReservas = async () => {
     WHERE r.activo = 1;
   `);
 
+  // Rutas de carpeta y archivo
+  const rutaCarpeta = path.resolve('./reportes');
+  const rutaArchivo = path.join(rutaCarpeta, 'reservas.csv');
+
+  if (!fs.existsSync(rutaCarpeta)) {
+    fs.mkdirSync(rutaCarpeta, { recursive: true });
+  }
+
+  // Crear CSV
   const parser = new Parser();
   const csv = parser.parse(reservas);
-  const rutaArchivo = './reportes/reservas.csv';
+
+  // Guardar archivo
   fs.writeFileSync(rutaArchivo, csv);
+
   return rutaArchivo;
 };
