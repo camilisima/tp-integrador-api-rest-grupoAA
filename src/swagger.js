@@ -10,6 +10,6 @@ export const options = {
       { url: 'http://localhost:3000/api' }
     ],
   },
-  apis: ['./src/rutas/*.js'], // 👈 rutas donde están los @swagger
-  apis: ['./src/rutas/*.js'],
+  apis: ['./src/rutas/*.js'], 
+  
 };

@@ -3,8 +3,8 @@ import PDFDocument from 'pdfkit';
 import { Parser } from 'json2csv';
 import fs from 'fs';
 
-// 📄 Generar PDF de reservas
-//Generador de reservas pdf
+// Generar PDF de reservas
+//generador de reservas pdf
 export const generarPDFReservas = async () => {
   const [reservas] = await pool.query(`
     SELECT r.reserva_id, r.fecha_reserva, u.nombre AS cliente, s.titulo AS salon, r.importe_total
@@ -38,7 +38,7 @@ export const generarPDFReservas = async () => {
   return rutaArchivo;
 };
 
-// 📊 Generar CSV de reservas
+// Generar CSV de reservas
 //Generador cvs de reservas
 export const generarCSVReservas = async () => {
   const [reservas] = await pool.query(`

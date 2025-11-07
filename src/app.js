@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config(); //cargar variables de entorno
+dotenv.config(); 
 import express from 'express';
 import cors from 'cors';
 import salonesRutas from './rutas/salonesrutas.js';
@@ -9,18 +9,17 @@ import turnosRutas from './rutas/turnosRutas.js';
 import reservasRutas from './rutas/reservasrutas.js';
 import serviciosRutas from './rutas/serviciosrutas.js';
 import usuariosRutas from './rutas/usuariosRutas.js';
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
 import estadisticasRutas from './rutas/estadisticasRutas.js';
 import reportesRutas from './rutas/reportesRutas.js';
 import comentariosRutas from './rutas/comentariosRutas.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import { verifyMailer } from './utils/mail.js';
+verifyMailer();
 
 
 
-
-const app = express(); // declaramos app
-dotenv.config(); 
-
+const app = express(); 
 
 
 
@@ -85,11 +84,10 @@ async function probarDB() {
   }
 }
 
-// arrancamos el servidor
+// servidor
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
-  probarDB(); // ejecutamos la prueba de conexión
   probarDB(); 
 });

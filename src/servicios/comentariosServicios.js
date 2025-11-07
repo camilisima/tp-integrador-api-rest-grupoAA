@@ -1,6 +1,5 @@
 import pool from '../datos/basededatos.js';
 
-// 🔹 Listar todos los comentarios de una reserva
 //Todo los comentarios
 export const getComentariosPorReserva = async (reservaId) => {
   const [rows] = await pool.query(
@@ -14,7 +13,7 @@ export const getComentariosPorReserva = async (reservaId) => {
   return rows;
 };
 
-// 🔹 Crear un nuevo comentario
+
 //Nuevo comentario
 export const crearComentario = async ({ reserva_id, usuario_id, texto }) => {
   const [result] = await pool.query(
@@ -25,7 +24,7 @@ export const crearComentario = async ({ reserva_id, usuario_id, texto }) => {
   return result.insertId;
 };
 
-// 🔹 Borrado lógico
+
 //borrar
 export const deleteComentario = async (id) => {
   const [result] = await pool.query(
@@ -37,7 +36,6 @@ export const deleteComentario = async (id) => {
   return result.affectedRows;
 };
 
-// 🔹 Listar todos los comentarios activos (sin filtrar por reserva)
 //Comentarios activos sin filtrar
 export const getComentariosActivos = async () => {
   const [rows] = await pool.query(

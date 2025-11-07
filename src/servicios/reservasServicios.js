@@ -1,90 +1,59 @@
 import pool from '../datos/basededatos.js';
+import NotificacionesService from './notificacioneservicio.js';
+const noti = new NotificacionesService();
 
-// Admin/Empleado: listar todas las reservas activas
-// Reservas activas
-export const getAllReservas = async () => {
-  const [rows] = await pool.query(
-    'SELECT * FROM reservas WHERE activo = 1 ORDER BY reserva_id DESC'
-  );
-  return rows;
-};
-
-// Admin/Empleado: reservar por ID
-//Reserva por ID 
-export const getReservaById = async (id) => {
-  const [rows] = await pool.query(
-    'SELECT * FROM reservas WHERE reserva_id = ? AND activo = 1',
-    [Number(id)]
-  );
-  return rows[0];
-};
-
-// Cliente: crear su reserva
-// Crear reserva (Es para el cliente)
 export const crearReservaCliente = async (data) => {
-  const {
-    usuario_id, salon_id, turno_id, fecha_reserva,
-    tematica = null, importe_salon = null, importe_total = null, foto_cumpleaniero = null
-  } = data;
+  const { usuario_id, salon_id, turno_id, fecha_reserva, tematica, importe_salon, importe_total, foto_cumpleaniero } = data;
 
+  //  Insert
   const sql = `
     INSERT INTO reservas
-      (fecha_reserva, salon_id, usuario_id, turno_id, tematica,
-       importe_salon, importe_total, foto_cumpleaniero, activo)
+      (fecha_reserva, salon_id, usuario_id, turno_id, tematica, importe_salon, importe_total, foto_cumpleaniero, activo)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
   `;
-  const params = [
+  const [r] = await pool.query(sql, [
     fecha_reserva, Number(salon_id), Number(usuario_id), Number(turno_id),
-    tematica, importe_salon != null ? Number(importe_salon) : null,
+    tematica ?? null,
+    importe_salon != null ? Number(importe_salon) : null,
     importe_total != null ? Number(importe_total) : null,
-    foto_cumpleaniero
-  ];
+    foto_cumpleaniero ?? null
+  ]);
 
-  const [r] = await pool.query(sql, params);
-  return r.insertId;
-};
+  const reservaId = r.insertId;
 
-// Cliente: listar MIS reservas (por token.user)
-// Las reservas del cliente
-export const getReservasByUsuario = async (usuario_id) => {
+  // Datos para el correo 
   const [rows] = await pool.query(
-    'SELECT * FROM reservas WHERE usuario_id = ? AND activo = 1 ORDER BY reserva_id DESC',
-    [Number(usuario_id)]
+    `SELECT u.nombre_usuario AS email, s.titulo AS salon,
+            t.hora_desde, t.hora_hasta
+     FROM usuarios u
+     JOIN salones s ON s.salon_id = ?
+     JOIN turnos  t ON t.turno_id  = ?
+     WHERE u.usuario_id = ?`,
+    [Number(salon_id), Number(turno_id), Number(usuario_id)]
   );
-  return rows;
-};
+  const row = rows[0];
 
-// Admin: update flexible
-// Update (admin)
-export const updateReserva = async (id, data) => {
-  const setParts = [];
-  const values = [];
+  // Enviar mail 
+  try {
+    await noti.enviarCorreo({
+      to: row.email,                         
+      fecha: fecha_reserva,
+      salon: row.salon,
+      turno: `${row.hora_desde} - ${row.hora_hasta}`
+    });
 
-  for (const [k, v] of Object.entries(data)) {
-    setParts.push(`${k} = ?`);
-    if (['usuario_id','salon_id','turno_id'].includes(k)) {
-      values.push(Number(v));
-    } else if (['importe_salon','importe_total'].includes(k)) {
-      values.push(v != null ? Number(v) : null);
-    } else {
-      values.push(v ?? null);
+    // notificar admin opcional
+    if (process.env.ADMIN_EMAIL) {
+      await noti.enviarCorreo({
+        to: process.env.ADMIN_EMAIL,
+        fecha: fecha_reserva,
+        salon: row.salon,
+        turno: `${row.hora_desde} - ${row.hora_hasta}`
+      });
     }
+  } catch (err) {
+    console.error('⚠️ Falló el envío de notificación:', err.message);
   }
-  setParts.push('modificado = CURRENT_TIMESTAMP');
 
-  const sql = `UPDATE reservas SET ${setParts.join(', ')} WHERE reserva_id = ? AND activo = 1`;
-  values.push(Number(id));
-
-  const [r] = await pool.query(sql, values);
-  return r.affectedRows;
-};
-
-// Admin: baja lógica
-// Baja (admin)
-export const deleteReserva = async (id) => {
-  const [r] = await pool.query(
-    'UPDATE reservas SET activo = 0, modificado = CURRENT_TIMESTAMP WHERE reserva_id = ?',
-    [Number(id)]
-  );
-  return r.affectedRows;
+  return reservaId;
 };
