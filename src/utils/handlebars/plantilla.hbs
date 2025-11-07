@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <body style="font-family: Arial, sans-serif;">
+    {{#if admin}}
+      <h2>Notificación interna</h2>
+      <p>Se creó una nueva reserva.</p>
+      <ul>
+        <li><b>Fecha:</b> {{fecha}}</li>
+        <li><b>Salón:</b> {{salon}}</li>
+        <li><b>Turno:</b> {{turno}}</li>
+      </ul>
+    {{else}}
+      <h2>¡Gracias por reservar!</h2>
+      <p>Tu reserva fue confirmada:</p>
+      <ul>
+        <li><b>Fecha:</b> {{fecha}}</li>
+        <li><b>Salón:</b> {{salon}}</li>
+        <li><b>Turno:</b> {{turno}}</li>
+      </ul>
+      <p>Ante cualquier consulta, respondé este correo.</p>
+    {{/if}}
+  </body>
+</html>
