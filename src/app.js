@@ -26,6 +26,7 @@ const app = express();
 // middlewares
 app.use(cors());
 app.use(express.json());
+
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -36,12 +37,27 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000/api',
+        url: 'http://localhost:3000/',
         description: 'Servidor local',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Introduce tu token JWT (sin "Bearer").',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
-  apis: ['./src/rutas/*.js'], 
+  apis: ['./src/rutas/*.js'],
 };
 
 const swaggerSpecs = swaggerJsdoc(swaggerOptions);
