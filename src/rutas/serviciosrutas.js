@@ -1,137 +1,91 @@
 import express from 'express';
 import { body, param } from 'express-validator';
-import apicache from 'apicache'
+import apicache from 'apicache';
 import * as serviciosControlador from '../controladores/servicioscontrolador.js';
-import { requireAuth, empleadoOAdmin } from '../middlewares/auth.js';
+import { requireAuth, empleadoOAdmin, soloAdmin } from '../middlewares/auth.js';
 
 const router = express.Router();
 const cache = apicache.middleware;
 
-/**
- * @swagger
- * tags:
- *   - name: Servicios
- *     description: Endpoints para gestionar servicios
- */
+//validaciones
+
+// Validación de ID
+const validateId = [
+  param('id')
+    .isInt({ gt: 0 })
+    .withMessage('El ID debe ser un entero mayor a 0'),
+];
+
+// Validación de body para crear/editar servicio
+const validateServicio = [
+  body('descripcion')
+    .notEmpty()
+    .withMessage('La descripción es obligatoria')
+    .isString()
+    .isLength({ max: 255 }),
+
+  body('importe')
+    .isFloat({ gt: 0 })
+    .withMessage('El importe debe ser un número mayor que 0'),
+];
+
+//rutas
 
 /**
- * @swagger
- * /api/servicios:
- *   get:
- *     tags: [Servicios]
- *     summary: Lista servicios activos (público, con cache)
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   servicio_id: { type: integer }
- *                   descripcion: { type: string }
- *                   importe: { type: number }
- *                   activo: { type: integer }
+ * GET /api/servicios
+ * Público — listado de servicios
  */
+router.get(
+  '/',
+  cache('2 minutos'),
+  serviciosControlador.getServicios
+);
 
 /**
- * @swagger
- * /api/servicios/{id}:
- *   get:
- *     tags: [Servicios]
- *     summary: Obtiene un servicio por ID (público)
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: integer }
- *     responses:
- *       200: { description: OK }
- *       404: { description: No encontrado }
+ * GET /api/servicios/:id
+ * Público
  */
+router.get(
+  '/:id',
+  cache('2 minutos'),
+  validateId,
+  serviciosControlador.getServicioById
+);
 
 /**
- * @swagger
- * /api/servicios:
- *   post:
- *     tags: [Servicios]
- *     summary: Crea un servicio (empleado o admin)
- *     security: [ { bearerAuth: [] } ]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           example:
- *             descripcion: "Maquillaje infantil"
- *             importe: 25000
- *     responses:
- *       201: { description: Creado }
- *       400: { description: Error de validación }
- *       401: { description: No autorizado }
+ * POST /api/servicios
+ * Empleado / Admin
  */
-
-/**
- * @swagger
- * /api/servicios/{id}:
- *   put:
- *     tags: [Servicios]
- *     summary: Actualiza un servicio (empleado o admin)
- *     security: [ { bearerAuth: [] } ]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: integer }
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           example:
- *             descripcion: "Maquillaje infantil PRO"
- *             importe: 30000
- *     responses:
- *       200: { description: Actualizado }
- *       404: { description: No encontrado }
- */
-
-/**
- * @swagger
- * /api/servicios/{id}:
- *   delete:
- *     tags: [Servicios]
- *     summary: Baja lógica de un servicio (solo admin)
- *     security: [ { bearerAuth: [] } ]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: integer }
- *     responses:
- *       200: { description: Eliminado }
- *       404: { description: No encontrado }
- */
-
-
-router.get('/',cache('2 minutos'), serviciosControlador.getServicios);
-router.get('/:id',cache('2 minutos'), param('id').isInt().toInt(), serviciosControlador.getServicioById);
-
-router.post('/', requireAuth, empleadoOAdmin, [body('descripcion').notEmpty(), body('importe').isNumeric()],
+router.post(
+  '/',
+  requireAuth,
+  empleadoOAdmin,
+  validateServicio,
   serviciosControlador.createServicio
 );
 
-router.put('/:id',
+/**
+ * PUT /api/servicios/:id
+ * Empleado / Admin
+ */
+router.put(
+  '/:id',
   requireAuth,
   empleadoOAdmin,
-  [param('id').isInt().toInt(), body('descripcion').notEmpty(), body('importe').isNumeric()],
+  validateId,
+  validateServicio,
   serviciosControlador.updateServicio
 );
 
-router.delete('/:id',
+/**
+ * DELETE /api/servicios/:id
+ * Solo Admin
+ */
+router.delete(
+  '/:id',
   requireAuth,
-  empleadoOAdmin,
-  param('id').isInt().toInt(),
+  soloAdmin,
+  validateId,
   serviciosControlador.deleteServicio
 );
 

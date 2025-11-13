@@ -1,56 +1,29 @@
-import pool from '../datos/basededatos.js';
+import * as dao from '../datos/turnosDAO.js';
 
-//Obtener todos los turnos activos
-
-//Turnos
+// Listar turnos
 export const getAllTurnos = async () => {
-    const sql = `SELECT * FROM turnos WHERE activo = 1`;
-    const [rows] = await pool.query(sql);
-    return rows;
+  return await dao.findAll();
 };
 
-//Obtener un turno por ID
-//buscar por id
+// Turno por ID
 export const getTurnoById = async (id) => {
-    const sql = `SELECT * FROM turnos WHERE turno_id = ? AND activo = 1`;
-    const [rows] = await pool.query(sql, [id]);
-    return rows[0];
+  return await dao.findById(id);
 };
 
-//Crear un nuevo turno
-//Nuevo turno
-export const createTurno = async (turno) => {
-    const { hora_desde, hora_hasta } = turno;
-    const sql = `
-        INSERT INTO turnos (hora_desde, hora_hasta, activo) 
-        VALUES (?, ?, 1)
-    `;
-    const [result] = await pool.query(sql, [hora_desde, hora_hasta]);
-    return result.insertId;
+// Crear turno
+export const createTurno = async (data) => {
+  const id = await dao.insert(data);
+  return id;
 };
 
-//Actualizar un turno existente
-//Actualizar
-export const updateTurno = async (id, turno) => {
-    const { hora_desde, hora_hasta } = turno;
-    const sql = `
-        UPDATE turnos 
-        SET hora_desde = ?, hora_hasta = ? 
-        WHERE turno_id = ? AND activo = 1
-        UPDATE turnos SET hora_desde = ?, hora_hasta = ?  WHERE turno_id = ? AND activo = 1
-    `; 
-    const [result] = await pool.query(sql, [hora_desde, hora_hasta, id]);
-    return result.affectedRows;
+// Actualizar turno
+export const updateTurno = async (id, data) => {
+  const filas = await dao.update(id, data);
+  return filas;
 };
 
-//Soft Delete
+// Baja lógica
 export const deleteTurno = async (id) => {
-    const sql = `
-        UPDATE turnos 
-        SET activo = 0 
-        WHERE turno_id = ?
-        UPDATE turnos SET activo = 0 WHERE turno_id = ?
-    `;
-    const [result] = await pool.query(sql, [id]);
-    return result.affectedRows;
+  const filas = await dao.softDelete(id);
+  return filas;
 };

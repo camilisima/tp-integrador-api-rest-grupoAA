@@ -1,7 +1,7 @@
 import express from 'express';
 import { body, param } from 'express-validator';
-import apicache from 'apicache'
-import * as turnoscontrolador from '../controladores/turnoscontrolador.js';
+import apicache from 'apicache';
+import * as turnosControlador from '../controladores/turnoscontrolador.js';
 import { requireAuth, empleadoOAdmin, soloAdmin } from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -31,9 +31,9 @@ const cache = apicache.middleware;
  *                 type: object
  *                 properties:
  *                   turno_id: { type: integer }
- *                   descripcion: { type: string }
- *                   hora_inicio: { type: string }
- *                   hora_fin: { type: string }
+ *                   orden: { type: integer }
+ *                   hora_desde: { type: string, example: "12:00:00" }
+ *                   hora_hasta: { type: string, example: "14:00:00" }
  *                   activo: { type: integer }
  */
 
@@ -58,18 +58,18 @@ const cache = apicache.middleware;
  * /api/turnos:
  *   post:
  *     tags: [Turnos]
- *     summary: Crea un nuevo turno (empleado o admin)
+ *     summary: Crea un turno (empleado o admin)
  *     security: [ { bearerAuth: [] } ]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           example:
- *             descripcion: "Turno tarde"
- *             hora_inicio: "14:00:00"
- *             hora_fin: "19:00:00"
+ *             orden: 1
+ *             hora_desde: "12:00:00"
+ *             hora_hasta: "14:00:00"
  *     responses:
- *       201: { description: Creado correctamente }
+ *       201: { description: Creado }
  *       400: { description: Error de validación }
  *       401: { description: No autorizado }
  */
@@ -79,7 +79,7 @@ const cache = apicache.middleware;
  * /api/turnos/{id}:
  *   put:
  *     tags: [Turnos]
- *     summary: Actualiza un turno existente (empleado o admin)
+ *     summary: Actualiza un turno (empleado o admin)
  *     security: [ { bearerAuth: [] } ]
  *     parameters:
  *       - in: path
@@ -91,11 +91,11 @@ const cache = apicache.middleware;
  *       content:
  *         application/json:
  *           example:
- *             descripcion: "Turno vespertino"
- *             hora_inicio: "15:00:00"
- *             hora_fin: "20:00:00"
+ *             orden: 2
+ *             hora_desde: "15:00:00"
+ *             hora_hasta: "17:00:00"
  *     responses:
- *       200: { description: Actualizado correctamente }
+ *       200: { description: Actualizado }
  *       404: { description: No encontrado }
  */
 
@@ -112,17 +112,73 @@ const cache = apicache.middleware;
  *         required: true
  *         schema: { type: integer }
  *     responses:
- *       200: { description: Eliminado correctamente }
+ *       200: { description: Eliminado }
  *       404: { description: No encontrado }
  */
 
-router.get('/',cache('2 minutos'), turnoscontrolador.getTurnos);
-router.get('/:id',cache('2 minutos'), param('id').isInt().toInt(), turnoscontrolador.getTurnoById);
-router.post('/', requireAuth, empleadoOAdmin, [
-  body('hora_desde').notEmpty(),
-  body('hora_hasta').notEmpty()
-], turnoscontrolador.createTurno);
-router.put('/:id', requireAuth, empleadoOAdmin, param('id').isInt().toInt(), turnoscontrolador.updateTurno);
-router.delete('/:id', requireAuth, soloAdmin, param('id').isInt().toInt(), turnoscontrolador.deleteTurno);
+//validaciones
+
+const validateId = [
+  param('id')
+    .isInt({ gt: 0 })
+    .withMessage('El ID debe ser un entero mayor a 0'),
+];
+
+const validateTurno = [
+  body('orden')
+    .isInt({ gt: 0 })
+    .withMessage('El orden debe ser un entero mayor que 0'),
+
+  body('hora_desde')
+    .matches(/^\d{2}:\d{2}(:\d{2})?$/)
+    .withMessage('hora_desde debe tener formato HH:MM o HH:MM:SS'),
+
+  body('hora_hasta')
+    .matches(/^\d{2}:\d{2}(:\d{2})?$/)
+    .withMessage('hora_hasta debe tener formato HH:MM o HH:MM:SS'),
+];
+
+//rutas
+
+// GET públicos 
+router.get(
+  '/',
+  cache('2 minutos'),
+  turnosControlador.getTurnos
+);
+
+router.get(
+  '/:id',
+  cache('2 minutos'),
+  validateId,
+  turnosControlador.getTurnoById
+);
+
+// Crear / actualizar: empleado o admin
+router.post(
+  '/',
+  requireAuth,
+  empleadoOAdmin,
+  validateTurno,
+  turnosControlador.createTurno
+);
+
+router.put(
+  '/:id',
+  requireAuth,
+  empleadoOAdmin,
+  validateId,
+  validateTurno,
+  turnosControlador.updateTurno
+);
+
+// Eliminar: solo admin
+router.delete(
+  '/:id',
+  requireAuth,
+  soloAdmin,
+  validateId,
+  turnosControlador.deleteTurno
+);
 
 export default router;

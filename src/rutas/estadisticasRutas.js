@@ -1,27 +1,21 @@
-import express from 'express';
+import { Router } from 'express';
+import { getEstadisticas } from '../controladores/estadisticasControlador.js';
 import { requireAuth, soloAdmin } from '../middlewares/auth.js';
-import { obtenerEstadisticas } from '../controladores/estadisticasControlador.js';
 
-const router = express.Router();
-
-/**
- * @swagger
- * tags:
- *   - name: Estadísticas
- *     description: Reporte de estadísticas de reservas
- */
+const router = Router();
 
 /**
  * @swagger
- * /api/estadisticas:
+ * /estadisticas:
  *   get:
+ *     summary: Obtener estadísticas mensuales de reservas
  *     tags: [Estadísticas]
- *     summary: Obtiene las estadísticas mensuales de reservas
- *     security: [ { bearerAuth: [] } ]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
- *       200: { description: OK }
- *       401: { description: No autorizado }
+ *       200:
+ *         description: Lista de estadísticas
  */
-router.get('/', requireAuth, soloAdmin, obtenerEstadisticas);
+router.get('/', requireAuth, soloAdmin, getEstadisticas);
 
 export default router;

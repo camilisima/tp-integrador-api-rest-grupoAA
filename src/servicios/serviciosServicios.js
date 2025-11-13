@@ -1,58 +1,29 @@
-import pool from '../datos/basededatos.js';
+import * as dao from '../datos/serviciosDAO.js';
 
-//Obtener todos los servicios activos
-
-//Todo los servicios
+// Listar todos los servicios
 export const getAllServicios = async () => {
-    const sql = `SELECT * FROM servicios WHERE activo = 1`;
-    const [rows] = await pool.query(sql);
-    return rows;
+  return await dao.findAll();
 };
 
-//Obtener un servicio por ID
-//Buuscar por ID
-
-//Buscar por ID
+// Servicio por ID
 export const getServicioById = async (id) => {
-    const sql = `SELECT * FROM servicios WHERE servicio_id = ? AND activo = 1`;
-    const [rows] = await pool.query(sql, [id]);
-    return rows[0];
+  return await dao.findById(id);
 };
 
-//Crear un nuevo servicio
-
-//Crear nuevo servicio
-export const createServicio = async (servicio) => {
-    const {descripcion, importe } = servicio;
-    const sql = `
-        INSERT INTO servicios (descripcion, importe, activo) 
-        VALUES (?, ?, ?, 1)
-    `;
-    const [result] = await pool.query(sql, [descripcion, importe]);
-    return result.insertId;
+// Crear servicio
+export const createServicio = async (data) => {
+  const id = await dao.insert(data);
+  return id;
 };
 
-//Actualizar un servicio existente
-
-//Actualizar servicio
-export const updateServicio = async (id, servicio) => {
-    const {descripcion, importe } = servicio;
-    const sql = `
-        UPDATE servicios 
-        SET  descripcion = ?, importe = ? 
-        WHERE servicio_id = ? AND activo = 1
-    `; 
-    const [result] = await pool.query(sql, [descripcion, importe, id]);
-    return result.affectedRows;
+// Actualizar servicio
+export const updateServicio = async (id, data) => {
+  const filas = await dao.update(id, data);
+  return filas;
 };
 
-//Soft Delete
+// Baja lógica
 export const deleteServicio = async (id) => {
-    const sql = `
-        UPDATE servicios 
-        SET activo = 0 
-        WHERE servicio_id = ?
-    `;
-    const [result] = await pool.query(sql, [id]);
-    return result.affectedRows;
+  const filas = await dao.softDelete(id);
+  return filas;
 };

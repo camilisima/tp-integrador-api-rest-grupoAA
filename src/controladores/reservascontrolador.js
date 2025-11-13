@@ -1,18 +1,21 @@
 import { validationResult } from 'express-validator';
-import * as svc from '../servicios/reservasServicios.js';
+import * as reservasSrv from '../servicios/reservasServicios.js';
 
-// Cliente: GET /api/reservas/mias
+
+// Cliente: Listar MIS reservas
+
 export const listarMias = async (req, res) => {
   try {
-    const reservas = await svc.getReservasByUsuario(req.user.usuario_id);
+    const reservas = await reservasSrv.getReservasByUsuario(req.user.usuario_id);
     res.json(reservas);
   } catch (e) {
-    console.error(e);
+    console.error('Error listarMias:', e);
     res.status(500).json({ message: 'Error al listar mis reservas' });
   }
 };
 
-// Cliente: POST /api/reservas
+// Cliente: Crear reserva
+
 export const crearReservaCliente = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -20,62 +23,81 @@ export const crearReservaCliente = async (req, res) => {
   try {
     const payload = {
       ...req.body,
-      usuario_id: req.user.usuario_id, // viene del JWT
+      usuario_id: req.user.usuario_id,
     };
-    const id = await svc.crearReservaCliente(payload);
-    res.status(201).json({ message: 'Reserva creada', id });
+
+    const id = await reservasSrv.crearReservaCliente(payload);
+
+    res.status(201).json({ id, message: 'Reserva creada correctamente' });
   } catch (e) {
-    console.error(e);
+    console.error('Error crearReservaCliente:', e);
     res.status(500).json({ message: 'Error al crear reserva' });
   }
 };
 
-// Empleado/Admin: GET /api/reservas
+
+// Empleado/Admin: Listar todas las reservas
+
 export const getReservas = async (_req, res) => {
   try {
-    const r = await svc.getAllReservas();
-    res.json(r);
+    const reservas = await reservasSrv.getAllReservas();
+    res.json(reservas);
   } catch (e) {
-    console.error(e);
+    console.error('Error getReservas:', e);
     res.status(500).json({ message: 'Error al obtener reservas' });
   }
 };
 
-// Empleado/Admin: GET /api/reservas/:id
+
+//  Empleado/Admin: Obtener reserva por ID
+
 export const getReservaById = async (req, res) => {
   try {
-    const r = await svc.getReservaById(req.params.id);
-    if (!r) return res.status(404).json({ message: 'Reserva no encontrada' });
-    res.json(r);
+    const reserva = await reservasSrv.getReservaById(req.params.id);
+
+    if (!reserva)
+      return res.status(404).json({ message: 'Reserva no encontrada' });
+
+    res.json(reserva);
   } catch (e) {
-    console.error(e);
+    console.error('Error getReservaById:', e);
     res.status(500).json({ message: 'Error al buscar reserva' });
   }
 };
 
-// Admin: PUT /api/reservas/:id
+
+// Admin: Actualizar reserva
+
 export const updateReserva = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
   try {
-    const ok = await svc.updateReserva(req.params.id, req.body);
-    if (!ok) return res.status(404).json({ message: 'Reserva no encontrada' });
-    res.json({ message: 'Reserva actualizada' });
+    const updated = await reservasSrv.updateReserva(req.params.id, req.body);
+
+    if (!updated)
+      return res.status(404).json({ message: 'Reserva no encontrada' });
+
+    res.json({ message: 'Reserva actualizada correctamente' });
   } catch (e) {
-    console.error(e);
+    console.error('Error updateReserva:', e);
     res.status(500).json({ message: 'Error al actualizar reserva' });
   }
 };
 
-// Admin: DELETE /api/reservas/:id
+
+// Admin: Eliminar (baja lógica)
+
 export const deleteReserva = async (req, res) => {
   try {
-    const ok = await svc.deleteReserva(req.params.id);
-    if (!ok) return res.status(404).json({ message: 'Reserva no encontrada' });
-    res.json({ message: 'Reserva eliminada' });
+    const deleted = await reservasSrv.deleteReserva(req.params.id);
+
+    if (!deleted)
+      return res.status(404).json({ message: 'Reserva no encontrada' });
+
+    res.json({ message: 'Reserva eliminada correctamente' });
   } catch (e) {
-    console.error(e);
+    console.error('Error deleteReserva:', e);
     res.status(500).json({ message: 'Error al eliminar reserva' });
   }
 };

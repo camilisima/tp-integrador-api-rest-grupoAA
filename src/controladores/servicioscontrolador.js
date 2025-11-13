@@ -50,7 +50,7 @@ export const updateServicio = async (req, res) => {
     if (!ok) return res.status(404).json({ message: 'Servicio no encontrado' });
     res.json({ message: 'Servicio actualizado' });
   } catch (e) {
-    console.error('Eror al actualizar servicio:', e);
+    console.error('Error al actualizar servicio:', e);
     res.status(500).json({ message: 'Error al actualizar servicio' });
   }
 };

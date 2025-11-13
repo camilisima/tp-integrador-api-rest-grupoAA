@@ -1,13 +1,11 @@
-import * as estadisticasServicios from '../servicios/estadisticasServicios.js';
+import * as svc from '../servicios/estadisticasServicios.js';
 
-export const obtenerEstadisticas = async (_req, res) => {
+export const getEstadisticas = async (_req, res) => {
   try {
-    const data = await estadisticasServicios.getEstadisticas();
-    res.json(data);
+    const stats = await svc.obtenerEstadisticas();
+    res.json(stats);
   } catch (error) {
-    console.error('Error al obtener estadísticas:', error);
-    res.status(500).json({ message: 'Error al obtener estadísticas' });
-    console.error('Error al obtener estadisticas:', error);
-    res.status(500).json({ message: 'Error al obtener estadisticas' });
+    console.error("Error estadísticas:", error);
+    res.status(500).json({ message: "Error al obtener estadísticas" });
   }
 };
