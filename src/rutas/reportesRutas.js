@@ -1,39 +1,34 @@
-import express from 'express';
+import { Router } from 'express';
+import {
+  generarReportePDF,
+  generarReporteCSV
+} from '../controladores/reportesControlador.js';
+
 import { requireAuth, soloAdmin } from '../middlewares/auth.js';
-import { generarReportePDF, generarReporteCSV } from '../controladores/reportesControlador.js';
 
-const router = express.Router();
-
-/**
- * @swagger
- * tags:
- *   - name: Reportes
- *     description: Generación de reportes de reservas
- */
+const router = Router();
 
 /**
  * @swagger
- * /api/reportes/pdf:
+ * /reportes/pdf:
  *   get:
  *     tags: [Reportes]
  *     summary: Genera un archivo PDF con las reservas
  *     security: [ { bearerAuth: [] } ]
  *     responses:
- *       200: { description: OK }
- *       401: { description: No autorizado }
+ *       200: { description: PDF generado }
  */
 router.get('/pdf', requireAuth, soloAdmin, generarReportePDF);
 
 /**
  * @swagger
- * /api/reportes/csv:
+ * /reportes/csv:
  *   get:
  *     tags: [Reportes]
  *     summary: Genera un archivo CSV con las reservas
  *     security: [ { bearerAuth: [] } ]
  *     responses:
- *       200: { description: OK }
- *       401: { description: No autorizado }
+ *       200: { description: CSV generado }
  */
 router.get('/csv', requireAuth, soloAdmin, generarReporteCSV);
 

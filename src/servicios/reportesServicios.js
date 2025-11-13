@@ -1,84 +1,55 @@
-import pool from '../datos/basededatos.js';
+import fs from 'fs';
 import PDFDocument from 'pdfkit';
 import { Parser } from 'json2csv';
-import fs from 'fs';
-import path from 'path';
+import * as dao from '../datos/reportesDAO.js';
+
+
+//     PDF DE RESERVAS
 
 export const generarPDFReservas = async () => {
-  // Consultar reservas activas
-  const [reservas] = await pool.query(`
-    SELECT r.reserva_id, r.fecha_reserva, u.nombre AS cliente, s.titulo AS salon, r.importe_total
-    FROM reservas r
-    JOIN usuarios u ON r.usuario_id = u.usuario_id
-    JOIN salones s ON r.salon_id = s.salon_id
-    WHERE r.activo = 1;
-  `);
+  // Datos desde el stored procedure
+  const reservas = await dao.getReporteReservas();
 
-  // Rutas de carpeta y archivo
-  const rutaCarpeta = path.resolve('./reportes');
-  const rutaArchivo = path.join(rutaCarpeta, 'reservas.pdf');
+  // Archivo destino
+  const rutaArchivo = './reportes/reservas.pdf';
 
-  // ✅ Crear carpeta si no existe
-  if (!fs.existsSync(rutaCarpeta)) {
-    fs.mkdirSync(rutaCarpeta, { recursive: true });
-  }
-
-  // Crear documento PDF
-  const doc = new PDFDocument({ margin: 40 });
+  // Crear PDF
+  const doc = new PDFDocument();
   const stream = fs.createWriteStream(rutaArchivo);
   doc.pipe(stream);
 
-  // Encabezado
-  doc.fontSize(18).text('Reporte de Reservas', { align: 'center' });
-  doc.moveDown();
-  doc.fontSize(12).text(`Generado el: ${new Date().toLocaleString()}`);
-  doc.moveDown();
+  // Título
+  doc.fontSize(20).text('Reporte de Reservas', { align: 'center' });
+  doc.moveDown(2);
 
-  // Contenido
-  reservas.forEach((r) => {
-    doc
-      .fontSize(12)
-      .text(`ID: ${r.reserva_id}`)
-      .text(`Cliente: ${r.cliente}`)
-      .text(`Salón: ${r.salon}`)
+  // Cuerpo
+  reservas.forEach(r => {
+    doc.fontSize(12)
+      .text(`ID Reserva: ${r.reserva_id}`)
       .text(`Fecha: ${r.fecha_reserva}`)
+      .text(`Cliente: ${r.cliente} ${r.cliente_apellido}`)
+      .text(`Salón: ${r.salon}`)
+      .text(`Turno: ${r.hora_desde} - ${r.hora_hasta}`)
       .text(`Importe Total: $${r.importe_total}`)
       .moveDown();
   });
 
-  // Cerrar documento
   doc.end();
 
-  // Esperar a que el PDF termine de generarse
-  return new Promise((resolve, reject) => {
-    stream.on('finish', () => resolve(rutaArchivo));
-    stream.on('error', (err) => reject(err));
-  });
+  return rutaArchivo;
 };
 
+
+//     CSV DE RESERVAS
+
 export const generarCSVReservas = async () => {
-  // Consultar reservas activas
-  const [reservas] = await pool.query(`
-    SELECT r.reserva_id, r.fecha_reserva, u.nombre AS cliente, s.titulo AS salon, r.importe_total
-    FROM reservas r
-    JOIN usuarios u ON r.usuario_id = u.usuario_id
-    JOIN salones s ON r.salon_id = s.salon_id
-    WHERE r.activo = 1;
-  `);
+  // Datos desde stored procedure
+  const reservas = await dao.getReporteReservas();
 
-  // Rutas de carpeta y archivo
-  const rutaCarpeta = path.resolve('./reportes');
-  const rutaArchivo = path.join(rutaCarpeta, 'reservas.csv');
-
-  if (!fs.existsSync(rutaCarpeta)) {
-    fs.mkdirSync(rutaCarpeta, { recursive: true });
-  }
-
-  // Crear CSV
   const parser = new Parser();
   const csv = parser.parse(reservas);
 
-  // Guardar archivo
+  const rutaArchivo = './reportes/reservas.csv';
   fs.writeFileSync(rutaArchivo, csv);
 
   return rutaArchivo;

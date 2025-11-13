@@ -1,23 +1,72 @@
 <!doctype html>
 <html>
-  <body style="font-family: Arial, sans-serif;">
-    {{#if admin}}
-      <h2>Notificación interna</h2>
-      <p>Se creó una nueva reserva.</p>
-      <ul>
-        <li><b>Fecha:</b> {{fecha}}</li>
-        <li><b>Salón:</b> {{salon}}</li>
-        <li><b>Turno:</b> {{turno}}</li>
-      </ul>
-    {{else}}
-      <h2>¡Gracias por reservar!</h2>
-      <p>Tu reserva fue confirmada:</p>
-      <ul>
-        <li><b>Fecha:</b> {{fecha}}</li>
-        <li><b>Salón:</b> {{salon}}</li>
-        <li><b>Turno:</b> {{turno}}</li>
-      </ul>
-      <p>Ante cualquier consulta, respondé este correo.</p>
-    {{/if}}
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      .container {
+        font-family: Arial, sans-serif;
+        max-width: 480px;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        background: #fafafa;
+      }
+      h2 {
+        color: #333;
+      }
+      .detalle {
+        background: white;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #666;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      
+      {{#if admin}}
+        <h2>Nueva reserva registrada</h2>
+        <p>Se ha generado una nueva reserva en el sistema:</p>
+
+        <div class="detalle">
+          <p><b>📅 Fecha:</b> {{fecha}}</p>
+          <p><b>🏛 Salón:</b> {{salon}}</p>
+          <p><b>⏰ Turno:</b> {{turno}}</p>
+        </div>
+
+        <p>Revisá la reserva en el panel administrativo.</p>
+
+      {{else}}
+
+        <h2>¡Tu reserva fue confirmada!</h2>
+        <p>Estos son los datos de tu reserva:</p>
+
+        <div class="detalle">
+          <p><b>📅 Fecha:</b> {{fecha}}</p>
+          <p><b>🏛 Salón:</b> {{salon}}</p>
+          <p><b>⏰ Turno:</b> {{turno}}</p>
+        </div>
+
+        <p>
+          Gracias por elegirnos.  
+          Por consultas respondé este correo.
+        </p>
+
+      {{/if}}
+
+      <p class="footer">
+        Este mensaje fue generado automáticamente por el Sistema de Reservas.
+      </p>
+
+    </div>
   </body>
 </html>

@@ -16,13 +16,13 @@ export const login = async (req, res) => {
     const stored = u.contrasenia ?? '';
     let ok = false;
 
-    // 1) bcrypt primero
+    // bcrypt 
  
     if (stored.startsWith('$2a$') || stored.startsWith('$2b$')) {
       ok = bcrypt.compareSync(contrasenia, stored);
     }
 
-    // 2) fallback MD5 → migrar a bcrypt
+    // MD5 → migrar a bcrypt
     if (!ok && /^[a-f0-9]{32}$/i.test(stored)) {
       const md5 = crypto.createHash('md5').update(contrasenia).digest('hex');
       if (md5 === stored) {

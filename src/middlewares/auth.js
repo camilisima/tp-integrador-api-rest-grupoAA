@@ -7,10 +7,6 @@ export const requireAuth = (req, res, next) => {
     return res.status(401).json({ message: 'Token requerido' });
   }
   try {
-    console.log('🔍 Token recibido:', token);
-    console.log('🔑 Clave usada:', process.env.JWT_SECRET);
-    console.log('Token recibido:', token);
-    console.log('Clave usada:', process.env.JWT_SECRET);
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     req.user = payload;
     next();

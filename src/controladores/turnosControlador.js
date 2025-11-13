@@ -2,6 +2,8 @@ import { validationResult } from 'express-validator';
 import * as turnosservicios from '../servicios/turnosServicios.js';
 
 
+// GET TODOS LOS TURNOS
+
 export const getTurnos = async (req, res) => {
   try {
     const rows = await turnosservicios.getAllTurnos();
@@ -12,6 +14,9 @@ export const getTurnos = async (req, res) => {
   }
 };
 
+
+
+// GET POR ID
 
 export const getTurnoById = async (req, res) => {
   try {
@@ -25,13 +30,17 @@ export const getTurnoById = async (req, res) => {
 };
 
 
+
+// CREAR TURNO
+
 export const createTurno = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-  const { hora_desde, hora_hasta } = req.body;
+  const { orden, hora_desde, hora_hasta } = req.body;
+
   try {
-    const id = await turnosservicios.createTurno({ hora_desde, hora_hasta });
+    const id = await turnosservicios.createTurno({ orden, hora_desde, hora_hasta });
     res.status(201).json({ id });
   } catch (error) {
     console.error('Error al crear turno:', error);
@@ -40,18 +49,35 @@ export const createTurno = async (req, res) => {
 };
 
 
+
+// ACTUALIZAR TURNO
+
 export const updateTurno = async (req, res) => {
-  const { hora_desde, hora_hasta } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+  const { orden, hora_desde, hora_hasta } = req.body;
+
   try {
-    const ok = await turnosservicios.updateTurno(req.params.id, { hora_desde, hora_hasta });
+    const ok = await turnosservicios.updateTurno(req.params.id, {
+      orden,
+      hora_desde,
+      hora_hasta
+    });
+
     if (!ok) return res.status(404).json({ message: 'turno no encontrado' });
     res.json({ message: 'Turno actualizado' });
+
   } catch (error) {
     console.error('Error al actualizar turno:', error);
     res.status(500).json({ message: 'Error al actualizar turno' });
   }
 };
 
+
+
+// ELIMINAR TURNO (BAJA LOGICA)
 
 export const deleteTurno = async (req, res) => {
   try {

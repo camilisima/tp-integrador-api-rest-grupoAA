@@ -1,15 +1,26 @@
-export const options = {
+export const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'API Reservas',
+      title: 'API Reservas de Salones',
       version: '1.0.0',
-      description: 'Documentación de la API REST para reservas de salones y servicios',
+      description: 'API REST para gestión de reservas de salones, servicios, turnos y usuarios',
     },
     servers: [
-      { url: 'http://localhost:3000/api' }
+      {
+        url: 'http://localhost:3000/api',
+      },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
   },
-  apis: ['./src/rutas/*.js'], 
-  
+
+  apis: ['./src/rutas/*.js'],
 };

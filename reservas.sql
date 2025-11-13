@@ -23,22 +23,27 @@ SET time_zone = "+00:00";
 
 USE reservas;
 
-DELIMITER $$
---
--- Procedimientos
---
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_estadisticas_reservas` ()   BEGIN
+DELIMITER //
+CREATE PROCEDURE sp_reporte_reservas()
+BEGIN
   SELECT 
-    DATE_FORMAT(fecha_reserva, '%Y-%m') AS mes,
-    COUNT(*) AS total_reservas,
-    SUM(importe_total) AS total_ingresos
-  FROM reservas
-  WHERE activo = 1
-  GROUP BY DATE_FORMAT(fecha_reserva, '%Y-%m')
-  ORDER BY mes DESC;
-END$$
-
-DELIMITER ;
+    r.reserva_id,
+    r.fecha_reserva,
+    r.importe_salon,
+    r.importe_total,
+    u.nombre AS cliente,
+    u.apellido AS cliente_apellido,
+    s.titulo AS salon,
+    t.hora_desde,
+    t.hora_hasta
+  FROM reservas r
+  JOIN usuarios u   ON r.usuario_id = u.usuario_id
+  JOIN salones s    ON r.salon_id  = s.salon_id
+  JOIN turnos t     ON r.turno_id  = t.turno_id
+  WHERE r.activo = 1
+  ORDER BY r.reserva_id DESC;
+END //
+DELIMITER ;---------------------------------
 
 -- --------------------------------------------------------
 
