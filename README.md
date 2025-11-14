@@ -1,64 +1,50 @@
-API REST – Sistema de Gestion de Salones
+ API REST – Sistema de Gestión de Salones
 
-Trabajo practico integrador- Entrega final.
-Programación III
-GRUPO AA 
+Trabajo Práctico Integrador – Entrega Final
+Programación III – Grupo AA
 
-Es una aplicación desarrollada con Node.js, Express, MySQL y JWT para la gestión de reservas, salones, turnos, servicios y usuarios.
+Este proyecto es una API REST desarrollada con Node.js, Express, MySQL y JWT, diseñada para gestionar reservas, salones, turnos, servicios y usuarios. Incluye autenticación por roles, envío de correos, generación de informes y documentación con Swagger.
 
-
-1. Clonar el repositorio
+- Clonar el repositorio
 
 git clone https://github.com/camilisima/tp-integrador-api-rest-grupoAA.git
 
 
-
-2. Instalar dependencias
+-Instalación de dependencias
 
 npm install
 
+Configuración de la base de datos
 
-3. Crear la base de datos y usuario en MySQL (ejecutar en Workbench o terminal):
+Ejecutar en MySQL Workbench o terminal:
 
 CREATE DATABASE IF NOT EXISTS reservas;
+
 CREATE USER IF NOT EXISTS 'tp_user'@'localhost' IDENTIFIED BY 'tp123';
+
 GRANT ALL PRIVILEGES ON reservas.* TO 'tp_user'@'localhost';
+
 FLUSH PRIVILEGES;
 
+Luego importar el archivo:
 
-4. Importar el script SQL ubicado en:
-📄 reservas.sql
-
-
-5. Crear un archivo .env en la raíz del proyecto (usar como referencia .env.example).
+📄 reservas.sql (ubicado en la raíz del proyecto)
 
 
-6. Ejecutar el servidor
+-Archivo .env
 
-npm run dev
+-Crear un archivo .env en la raíz del proyecto tomando como referencia el archivo:
 
+.env.example
 
-Credenciales de prueba
-
-Rol	Usuario	Contraseña
-
-Administrador	camila@correo.com	admin123
-
-Documentación Swagger
-
-Una vez levantado el servidor:
-http://localhost:3000/api/docs
-
-Desde allí se pueden probar todos los endpoints con sus métodos y parámetros.
-
-
-⚙️ Variables de entorno (archivo .env.example)
+Variables necesarias:
 
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_USER=tp_user
 DB_PASS=tp123
 DB_NAME=reservas
+
 PORT=3000
 JWT_SECRET=tpintegrador25
 
@@ -66,25 +52,74 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 CORREO=tu_correo@gmail.com
 CLAVE=tu_clave_de_aplicacion
-MAIL_FROM="Reservas App" <tu_correo@gmail.com>
+MAIL_FROM="Reservas App" tu_correo@gmail.com
 ADMIN_EMAIL=admin@correo.com
 
+-Ejecutar el servidor
 
----
+npm run dev
 
- Funcionalidades principales
 
-Autenticación con JWT.
+-Credenciales de prueba
 
-Roles: Cliente, Empleado, Administrador.
+Rol	Usuario	Contraseña
 
-CRUD de reservas, salones, servicios, turnos y usuarios.
+Administrador	camila@correo.com	admin123
 
-Envío de correos automáticos con Nodemailer.
 
-Informes PDF/CSV generados con pdfkit y json2csv.
+-Documentación de la API
 
-Documentación interactiva con Swagger.
+Una vez levantado el servidor:
+
+http://localhost:3000/api/docs
+
+Desde Swagger podés probar todos los endpoints con sus métodos, parámetros y seguridad JWT.
+
+Funcionalidades principales
+
+Autenticación y autorización con JWT
+Roles: Cliente, Empleado, Administrador
+CRUD completo de:
+
+Reservas
+
+Salones
+
+Turnos
+
+Servicios
+
+Usuarios
+
+
+-Envío automático de correos con Nodemailer
+-Generación de informes PDF y CSV
+-Documentación interactiva con Swagger 
+-Middleware de autenticación y validación
+
+
+
+-Tecnologías utilizadas
+
+Node.js
+
+Express
+
+MySQL
+
+JWT
+
+Nodemailer
+
+pdfkit
+
+json2csv
+
+Swagger UI
+
+Express Validator
+
+
 
 
 
