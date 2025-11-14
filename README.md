@@ -26,9 +26,9 @@ GRANT ALL PRIVILEGES ON reservas.* TO 'tp_user'@'localhost';
 
 FLUSH PRIVILEGES;
 
-Luego importar el archivo:
+-Luego importar el archivo:
 
-📄 reservas.sql (ubicado en la raíz del proyecto)
+reservas.sql (ubicado en la raíz del proyecto)
 
 
 -Archivo .env
