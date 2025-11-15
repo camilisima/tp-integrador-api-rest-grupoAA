@@ -23,10 +23,6 @@ import swaggerJsdoc from 'swagger-jsdoc';
 // Notificaciones 
 import NotificacionesService from './servicios/notificacioneservicio.js';
 const noti = new NotificacionesService();
-noti.verificarSMTP().catch(() =>
-  console.log('⚠️ Advertencia: SMTP no pudo verificarse. Revisar .env')
-);
-
 const app = express();
 
 // Middlewares globales

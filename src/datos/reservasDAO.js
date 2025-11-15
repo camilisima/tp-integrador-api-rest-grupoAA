@@ -1,6 +1,6 @@
 import pool from './basededatos.js';
 
-//insertar reserva (cliente)
+
 export const insertReserva = async (data) => {
   const {
     fecha_reserva,
@@ -35,28 +35,20 @@ export const insertReserva = async (data) => {
   return r.insertId;
 };
 
-//DATOS PARA CORREO (cliente y admin)
-export const getDatosCorreo = async (usuario_id, salon_id, turno_id) => {
-  const [rows] = await pool.query(
-    `
-      SELECT 
-        u.nombre_usuario AS email,
-        s.titulo AS salon,
-        t.hora_desde,
-        t.hora_hasta
-      FROM usuarios u
-      JOIN salones s ON s.salon_id = ?
-      JOIN turnos  t ON t.turno_id = ?
-      WHERE u.usuario_id = ?
-      LIMIT 1
-    `,
-    [Number(salon_id), Number(turno_id), Number(usuario_id)]
+
+export const getDatosNotificacion = async (reservaId) => {
+  const [resultSets] = await pool.query(
+    'CALL sp_datos_notificacion(?)',
+    [Number(reservaId)]
   );
 
-  return rows[0];
+  const infoReserva = resultSets[0][0];        
+  const admins = resultSets[1].map(a => a.email_admin); 
+
+  return { infoReserva, admins };
 };
 
-//TODAS LAS RESERVAS (Empleado/Admin)
+
 export const getAllReservas = async () => {
   const [rows] = await pool.query(`
     SELECT r.*, 
@@ -74,7 +66,7 @@ export const getAllReservas = async () => {
   return rows;
 };
 
-//RESERVA POR ID (Empleado/Admin)
+
 export const getReservaById = async (id) => {
   const [rows] = await pool.query(
     `
@@ -94,7 +86,7 @@ export const getReservaById = async (id) => {
   return rows[0];
 };
 
-//RESERVAS DE UN CLIENTE (Cliente)
+
 export const getReservasByUsuario = async (usuario_id) => {
   const [rows] = await pool.query(
     `
@@ -112,7 +104,7 @@ export const getReservasByUsuario = async (usuario_id) => {
   return rows;
 };
 
-//ACTUALIZAR RESERVA (Solo Admin)
+
 export const updateReserva = async (id, data) => {
   const columnas = [];
   const valores = [];
@@ -140,7 +132,7 @@ export const updateReserva = async (id, data) => {
   return r.affectedRows;
 };
 
-//BAJA LÓGICA (Solo Admin)
+
 export const deleteReserva = async (id) => {
   const [r] = await pool.query(
     `

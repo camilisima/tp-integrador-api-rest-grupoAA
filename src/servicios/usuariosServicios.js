@@ -10,7 +10,7 @@ export const getUsuarioById = async (id) => {
   return await dao.findById(id);
 };
 
-// Solo clientes (tipo_usuario = 3)
+// Solo clientes 
 export const getClientes = async () => {
   return await dao.findClientes();
 };
@@ -33,7 +33,7 @@ export const deleteUsuario = async (id) => {
   return filas;
 };
 
-// Para login: buscar por nombre_usuario
+
 export const findByNombreUsuario = async (nombre_usuario) => {
   return await dao.findByNombreUsuario(nombre_usuario);
 };

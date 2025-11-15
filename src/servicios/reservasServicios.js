@@ -1,75 +1,58 @@
 import * as dao from '../datos/reservasDAO.js';
+import * as notifDAO from '../datos/notificacionesDAO.js';
 import NotificacionesService from './notificacioneservicio.js';
 
 const noti = new NotificacionesService();
 
 
-//  Cliente crea una reserva
 
 export const crearReservaCliente = async (data) => {
-
-  // 1) Insert de la reserva
   const reservaId = await dao.insertReserva(data);
 
-  // 2) Datos para el correo
-  const info = await dao.getDatosCorreo(
-    data.usuario_id,
-    data.salon_id,
-    data.turno_id
-  );
 
-  // 3) Notificar cliente y admin
+  const datos = await notifDAO.getDatosNotificacion(reservaId);
+
+  const cliente = datos.cliente;
+  const admins = datos.admins;
+
   try {
+    
     await noti.enviarCorreo({
-      to: info.email,
-      fecha: data.fecha_reserva,
-      salon: info.salon,
-      turno: `${info.hora_desde} - ${info.hora_hasta}`
+      to: cliente.correo_cliente,
+      fecha: cliente.fecha_reserva,
+      salon: cliente.salon,
+      turno: `${cliente.hora_desde} - ${cliente.hora_hasta}`,
+      admin: false
     });
 
-    if (process.env.ADMIN_EMAIL) {
+    for (const admin of admins) {
       await noti.enviarCorreo({
-        to: process.env.ADMIN_EMAIL,
-        fecha: data.fecha_reserva,
-        salon: info.salon,
-        turno: `${info.hora_desde} - ${info.hora_hasta}`
+        to: admin.correo_admin,
+        fecha: cliente.fecha_reserva,
+        salon: cliente.salon,
+        turno: `${cliente.hora_desde} - ${cliente.hora_hasta}`,
+        admin: true
       });
     }
 
-  } catch (err) {
-    console.error('⚠ Error al enviar correo:', err.message);
+  } catch (error) {
+    console.error('⚠ Error al enviar correo:', error.message);
   }
 
   return reservaId;
 };
 
-// Empleado/Admin: todas las reservas activas
 
-export const getAllReservas = async () => {
-  return await dao.getAllReservas();
-};
+export const getAllReservas = () => dao.getAllReservas();
+export const getReservaById = (id) => dao.getReservaById(id);
 
-// Empleado/Admin: reserva por ID
-
-export const getReservaById = async (id) => {
-  return await dao.getReservaById(id);
-};
+export const getReservasByUsuario = (usuario_id) =>
+  dao.getReservasByUsuario(usuario_id);
 
 
-// Cliente: sus reservas
-
-export const getReservasByUsuario = async (usuario_id) => {
-  return await dao.getReservasByUsuario(usuario_id);
-};
+export const updateReserva = (id, data) =>
+  dao.updateReserva(id, data);
 
 
-// Admin: actualizar reserva
-export const updateReserva = async (id, data) => {
-  return await dao.updateReserva(id, data);
-};
-
-
-// Admin: baja lógica de reserva
-export const deleteReserva = async (id) => {
-  return await dao.deleteReserva(id);
-};
+export const deleteReserva = (id) =>
+  dao.deleteReserva(id);

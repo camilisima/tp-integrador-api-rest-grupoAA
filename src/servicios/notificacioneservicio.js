@@ -11,12 +11,12 @@ export default class NotificacionesService {
 
     const plantillaPath = path.join(__dirname, '../utils/handlebars/plantilla.hbs');
     const plantillaSrc = fs.readFileSync(plantillaPath, 'utf-8');
+
     this.template = handlebars.compile(plantillaSrc);
 
-    // Transporter Gmail
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587, // STARTTLS
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: Number(process.env.SMTP_PORT || 587),
       secure: false,
       auth: {
         user: process.env.CORREO,
@@ -25,22 +25,26 @@ export default class NotificacionesService {
     });
   }
 
-  async verificarSMTP() {
-    await this.transporter.verify();
-    console.log('✅ Conexión SMTP verificada correctamente');
-  }
+  async enviarCorreo({ to, fecha, salon, turno, admin = false }) {
+    if (!to) {
+      console.warn("⚠ No se envió correo porque 'to' está vacío.");
+      return;
+    }
 
-  async enviarCorreo({ to, fecha, salon, turno }) {
-    const html = this.template({ fecha, salon, turno });
+    const html = this.template({ fecha, salon, turno, admin });
+
+    const subject = admin
+      ? 'Nueva reserva registrada'
+      : 'Confirmación de reserva';
 
     const info = await this.transporter.sendMail({
       from: process.env.MAIL_FROM,
       to,
-      subject: 'Confirmación de reserva',
+      subject,
       html
     });
 
-    console.log('📧 Email enviado correctamente a:', to, '| ID:', info.messageId);
+    console.log(`📧 Email enviado a ${to} | ID: ${info.messageId}`);
     return info;
   }
 }

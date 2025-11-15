@@ -16,13 +16,13 @@ export const createServicio = async (data) => {
   return id;
 };
 
-// Actualizar servicio
+
 export const updateServicio = async (id, data) => {
   const filas = await dao.update(id, data);
   return filas;
 };
 
-// Baja lógica
+
 export const deleteServicio = async (id) => {
   const filas = await dao.softDelete(id);
   return filas;

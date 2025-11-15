@@ -439,10 +439,36 @@ BEGIN
   SELECT
     s.titulo AS salon,
     COUNT(r.reserva_id) AS reservas,
-    (COUNT(r.reserva_id) / (SELECT COUNT(*) FROM turnos)) * 100 AS porcentaje_ocupacion
+    (COUNT(r.reserva_id) / (SELECT COUNT(*) FROM turnos WHERE activo = 1)) * 100 AS porcentaje_ocupacion
   FROM salones s
   LEFT JOIN reservas r ON r.salon_id = s.salon_id AND r.activo = 1
   GROUP BY s.salon_id;
 END //
 
+DELIMITER ;
+
+--procedimiento de notificaciones
+DELIMITER //
+CREATE PROCEDURE sp_datos_notificacion(IN p_reserva_id INT)
+BEGIN
+  -- Datos de la reserva + cliente
+  SELECT 
+    r.reserva_id,
+    r.fecha_reserva,
+    s.titulo AS salon,
+    t.hora_desde,
+    t.hora_hasta,
+    u.nombre_usuario AS email_cliente
+  FROM reservas r
+    JOIN usuarios u ON u.usuario_id = r.usuario_id
+    JOIN salones s ON s.salon_id = r.salon_id
+    JOIN turnos t  ON t.turno_id = r.turno_id
+  WHERE r.reserva_id = p_reserva_id;
+
+  -- Correos de administradores
+  SELECT 
+    nombre_usuario AS email_admin
+  FROM usuarios
+  WHERE tipo_usuario = 1 AND activo = 1;
+END //
 DELIMITER ;
