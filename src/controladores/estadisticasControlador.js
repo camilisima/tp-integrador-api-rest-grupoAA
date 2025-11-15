@@ -12,27 +12,30 @@ export const getEstadisticas = async (_req, res) => {
 
 export const reservasPorSalon = async (_req, res) => {
   try {
-    const data = await estadisticasSrv.getReservasPorSalon();
+    const data = await svc.getReservasPorSalon();
     res.json(data);
   } catch (error) {
+    console.error("Error reservasPorSalon:", error);
     res.status(500).json({ message: 'Error al obtener reservas por salón' });
   }
 };
 
 export const reservasPorDia = async (_req, res) => {
   try {
-    const data = await estadisticasSrv.getReservasPorDia();
+    const data = await svc.getReservasPorDia();
     res.json(data);
   } catch (error) {
+    console.error("Error reservasPorDia:", error);
     res.status(500).json({ message: 'Error al obtener reservas por día' });
   }
 };
 
 export const porcentajeOcupacion = async (_req, res) => {
   try {
-    const data = await estadisticasSrv.getPorcentajeOcupacion();
+    const data = await svc.getPorcentajeOcupacion();
     res.json(data);
   } catch (error) {
+    console.error("Error porcentajeOcupacion:", error);
     res.status(500).json({ message: 'Error al obtener porcentaje de ocupación' });
   }
 };

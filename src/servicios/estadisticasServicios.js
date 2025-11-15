@@ -4,6 +4,14 @@ export const obtenerEstadisticas = async () => {
   return await dao.getEstadisticasMensuales();
 };
 
-export const getReservasPorSalon = async () => await estadisticasDao.obtenerReservasPorSalon();
-export const getReservasPorDia = async () => await estadisticasDao.obtenerReservasPorDia();
-export const getPorcentajeOcupacion = async () => await estadisticasDao.obtenerPorcentajeOcupacion();
+export const getReservasPorSalon = async () => {
+  return await dao.obtenerReservasPorSalon();
+};
+
+export const getReservasPorDia = async () => {
+  return await dao.obtenerReservasPorDia();
+};
+
+export const getPorcentajeOcupacion = async () => {
+  return await dao.obtenerPorcentajeOcupacion();
+};

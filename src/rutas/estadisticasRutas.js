@@ -1,5 +1,6 @@
+
 import { Router } from 'express';
-import { getEstadisticas } from '../controladores/estadisticasControlador.js';
+import * as estadisticasControlador from '../controladores/estadisticasControlador.js';
 import { requireAuth, soloAdmin } from '../middlewares/auth.js';
 
 const router = Router();
@@ -16,9 +17,10 @@ const router = Router();
  *       200:
  *         description: Lista de estadísticas
  */
-router.get('/', requireAuth, soloAdmin, getEstadisticas);
-router.get('/por-salon', requireAuth, soloAdmin, estadisticasCtrl.reservasPorSalon);
-router.get('/por-dia', requireAuth, soloAdmin, estadisticasCtrl.reservasPorDia);
-router.get('/ocupacion', requireAuth, soloAdmin, estadisticasCtrl.porcentajeOcupacion);
+router.get('/', requireAuth, soloAdmin, estadisticasControlador.getEstadisticas);
+router.get('/por-salon', requireAuth, soloAdmin, estadisticasControlador.reservasPorSalon);
+router.get('/por-dia', requireAuth, soloAdmin, estadisticasControlador.reservasPorDia);
+router.get('/ocupacion', requireAuth, soloAdmin, estadisticasControlador.porcentajeOcupacion);
+
 
 export default router;
