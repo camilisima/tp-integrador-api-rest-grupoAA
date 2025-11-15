@@ -397,3 +397,52 @@ BEGIN
   ORDER BY mes DESC;
 END //
 DELIMITER ;
+
+-- Procedimiento Reservas por salon
+DELIMITER //
+
+CREATE PROCEDURE sp_reservas_por_salon()
+BEGIN
+  SELECT
+    s.titulo AS salon,
+    COUNT(r.reserva_id) AS total_reservas,
+    SUM(r.importe_total) AS ingresos
+  FROM reservas r
+  JOIN salones s ON r.salon_id = s.salon_id
+  WHERE r.activo = 1
+  GROUP BY s.salon_id;
+END //
+
+DELIMITER ;
+
+-- Procedimiento  Reservas por dia
+DELIMITER //
+
+CREATE PROCEDURE sp_reservas_por_dia()
+BEGIN
+  SELECT
+    fecha_reserva,
+    COUNT(*) AS total_reservas
+  FROM reservas
+  WHERE activo = 1
+  GROUP BY fecha_reserva
+  ORDER BY fecha_reserva DESC;
+END //
+
+DELIMITER ;
+
+-- Procedimiento Porcentaje de ocupacion
+DELIMITER //
+
+CREATE PROCEDURE sp_porcentaje_ocupacion()
+BEGIN
+  SELECT
+    s.titulo AS salon,
+    COUNT(r.reserva_id) AS reservas,
+    (COUNT(r.reserva_id) / (SELECT COUNT(*) FROM turnos)) * 100 AS porcentaje_ocupacion
+  FROM salones s
+  LEFT JOIN reservas r ON r.salon_id = s.salon_id AND r.activo = 1
+  GROUP BY s.salon_id;
+END //
+
+DELIMITER ;

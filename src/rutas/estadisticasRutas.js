@@ -17,5 +17,8 @@ const router = Router();
  *         description: Lista de estadísticas
  */
 router.get('/', requireAuth, soloAdmin, getEstadisticas);
+router.get('/por-salon', requireAuth, soloAdmin, estadisticasCtrl.reservasPorSalon);
+router.get('/por-dia', requireAuth, soloAdmin, estadisticasCtrl.reservasPorDia);
+router.get('/ocupacion', requireAuth, soloAdmin, estadisticasCtrl.porcentajeOcupacion);
 
 export default router;
