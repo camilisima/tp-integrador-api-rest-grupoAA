@@ -228,8 +228,9 @@ INSERT INTO `usuarios` (`usuario_id`, `nombre`, `apellido`, `nombre_usuario`, `c
 (9, 'Admin', 'Principal', 'admin@correo.com', '$2b$10$ZJJir9xxRtqAOChEp12iuun7MCUmiLcQaJK4.U/otYVARIZY2GEDq', 1, NULL, NULL, 1, '2025-11-06 19:34:19', '2025-11-06 19:34:47'),
 (10, 'Florencia', 'Saez', 'florencia@correo.com', '$2b$10$hiJEy8.CuUSj17hmv9LawOdBXxYUvhRgNgVPlCCWAJiigGdBKE.6a', 1, NULL, NULL, 1, '2025-11-06 19:48:27', '2025-11-06 19:48:27'),
 (11, 'Martina', 'Moledo', 'martina@correo.com', '$2b$10$hiJEy8.CuUSj17hmv9LawOdBXxYUvhRgNgVPlCCWAJiigGdBKE.6a', 1, NULL, NULL, 1, '2025-11-06 19:48:27', '2025-11-06 19:48:27'),
-(12, 'Evangelina', 'Romano', 'evangelina@correo.com', '$2b$10$hiJEy8.CuUSj17hmv9LawOdBXxYUvhRgNgVPlCCWAJiigGdBKE.6a', 1, NULL, NULL, 1, '2025-11-06 19:48:27', '2025-11-06 19:48:27'),
+(12, 'Evangelina', 'Romano', 'evangelina.rom@gmail.com', '3d2dab31648970d4dcfde7185e5bac42', 1, NULL, NULL, 1, '2025-11-06 19:48:27', '2025-11-06 19:48:27'),
 (13, 'Camila', 'Lewis', 'camila@correo.com', '$2b$10$hiJEy8.CuUSj17hmv9LawOdBXxYUvhRgNgVPlCCWAJiigGdBKE.6a', 1, NULL, NULL, 1, '2025-11-06 19:48:27', '2025-11-06 19:48:27');
+(14, 'Eva', 'Romano', 'soyevaromano@gmail.com', 'c59e6c4ef9ce7e521bdb01544dc41f5f', 3, NULL, NULL, 1, '2025-11-06 19:48:27', '2025-11-06 19:48:27');
 
 --
 -- Índices para tablas volcadas
