@@ -18,7 +18,7 @@ export const crearReservaCliente = async (data) => {
   try {
     
     await noti.enviarCorreo({
-      to: cliente.correo_cliente,
+      to: cliente.email_cliente,
       fecha: cliente.fecha_reserva,
       salon: cliente.salon,
       turno: `${cliente.hora_desde} - ${cliente.hora_hasta}`,
@@ -27,7 +27,7 @@ export const crearReservaCliente = async (data) => {
 
     for (const admin of admins) {
       await noti.enviarCorreo({
-        to: admin.correo_admin,
+        to: admin.email_admin,
         fecha: cliente.fecha_reserva,
         salon: cliente.salon,
         turno: `${cliente.hora_desde} - ${cliente.hora_hasta}`,
