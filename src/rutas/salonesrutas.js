@@ -27,7 +27,6 @@ const validateSalon = [
 
 /**
  * GET /api/salones
- * Público — pero puede estar protegido si tu profe pidió TODO autenticado.
  */
 router.get(
   '/',
@@ -37,7 +36,6 @@ router.get(
 
 /**
  * GET /api/salones/:id
- * Público o protegido según requerimiento
  */
 router.get(
   '/:id',

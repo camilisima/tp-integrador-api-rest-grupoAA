@@ -5,8 +5,7 @@ import { requireAuth, empleadoOAdmin, soloAdmin } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-//validaciones
-
+// Validaciones
 const validateId = [
   param('id')
     .isInt({ gt: 0 })
@@ -34,18 +33,101 @@ const validateUpdate = [
   body('foto_cumpleaniero').optional().isString().isLength({ max: 255 }),
 ];
 
-/* -------------------------------- RUTAS -------------------------------- */
 
-// Cliente
+/**
+ * @swagger
+ * tags:
+ *   - name: Reservas
+ *     description: Gestión de reservas (Cliente, Empleado, Administrador)
+ */
+
+/**
+ * @swagger
+ * /api/reservas/mias:
+ *   get:
+ *     tags: [Reservas]
+ *     summary: Obtiene las reservas del usuario autenticado
+ *     security: [ { bearerAuth: [] } ]
+ *     responses:
+ *       200:
+ *         description: Lista de reservas del cliente
+ */
 router.get('/mias', requireAuth, reservasControlador.listarMias);
+
+/**
+ * @swagger
+ * /api/reservas:
+ *   post:
+ *     tags: [Reservas]
+ *     summary: Crea una nueva reserva (Cliente)
+ *     security: [ { bearerAuth: [] } ]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           example:
+ *             fecha_reserva: "2025-12-10"
+ *             salon_id: 2
+ *             turno_id: 1
+ *             tematica: "Frozen"
+ *     responses:
+ *       201:
+ *         description: Reserva creada correctamente
+ */
 router.post('/', requireAuth, validateCreate, reservasControlador.crearReservaCliente);
 
-// Empleado / Admin
+/**
+ * @swagger
+ * /api/reservas:
+ *   get:
+ *     tags: [Reservas]
+ *     summary: Lista todas las reservas (Empleado/Admin)
+ *     security: [ { bearerAuth: [] } ]
+ *     responses:
+ *       200:
+ *         description: Lista completa de reservas
+ */
 router.get('/', requireAuth, empleadoOAdmin, reservasControlador.getReservas);
+
+/**
+ * @swagger
+ * /api/reservas/{id}:
+ *   get:
+ *     tags: [Reservas]
+ *     summary: Obtiene una reserva por ID (Empleado/Admin)
+ *     security: [ { bearerAuth: [] } ]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Reserva encontrada
+ *       404:
+ *         description: No encontrada
+ */
 router.get('/:id', requireAuth, empleadoOAdmin, validateId, reservasControlador.getReservaById);
 
-// Solo Admin
+/**
+ * @swagger
+ * /api/reservas/{id}:
+ *   put:
+ *     tags: [Reservas]
+ *     summary: Actualiza una reserva (Administrador)
+ *     security: [ { bearerAuth: [] } ]
+ */
 router.put('/:id', requireAuth, soloAdmin, validateUpdate, reservasControlador.updateReserva);
+
+/**
+ * @swagger
+ * /api/reservas/{id}:
+ *   delete:
+ *     tags: [Reservas]
+ *     summary: Elimina lógicamente una reserva (Administrador)
+ *     security: [ { bearerAuth: [] } ]
+ */
 router.delete('/:id', requireAuth, soloAdmin, validateId, reservasControlador.deleteReserva);
 
 export default router;

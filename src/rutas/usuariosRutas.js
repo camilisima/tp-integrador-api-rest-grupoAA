@@ -75,7 +75,7 @@ const validateUpdate = [
 
 /**
  * @swagger
- * /usuarios:
+ * /api/usuarios:
  *   get:
  *     tags: [Usuarios]
  *     summary: Obtiene todos los usuarios (solo Admin)
@@ -87,7 +87,7 @@ const validateUpdate = [
 
 /**
  * @swagger
- * /usuarios/clientes:
+ * /api/usuarios/clientes:
  *   get:
  *     tags: [Usuarios]
  *     summary: Lista de clientes (Admin o Empleado)
@@ -99,7 +99,7 @@ const validateUpdate = [
 
 /**
  * @swagger
- * /usuarios/{id}:
+ * /api/usuarios/{id}:
  *   get:
  *     tags: [Usuarios]
  *     summary: Obtiene un usuario por ID (solo Admin)
@@ -119,7 +119,7 @@ const validateUpdate = [
 
 /**
  * @swagger
- * /usuarios:
+ * /api/usuarios:
  *   post:
  *     tags: [Usuarios]
  *     summary: Crea un nuevo usuario (solo Admin)
@@ -149,7 +149,7 @@ const validateUpdate = [
 
 /**
  * @swagger
- * /usuarios/{id}:
+ * /api/usuarios/{id}:
  *   put:
  *     tags: [Usuarios]
  *     summary: Modifica un usuario existente (solo Admin)
@@ -169,7 +169,7 @@ const validateUpdate = [
 
 /**
  * @swagger
- * /usuarios/{id}:
+ * /api/usuarios/{id}:
  *   delete:
  *     tags: [Usuarios]
  *     summary: Baja lógica de un usuario (solo Admin)

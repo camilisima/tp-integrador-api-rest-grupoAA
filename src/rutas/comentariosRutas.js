@@ -14,7 +14,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /comentarios:
+ * api/comentarios:
  *   get:
  *     summary: Obtener todos los comentarios activos
  *     tags: [Comentarios]
@@ -33,7 +33,7 @@ router.get(
 
 /**
  * @swagger
- * /comentarios/reserva/{reserva_id}:
+ * api/comentarios/reserva/{reserva_id}:
  *   get:
  *     summary: Obtener comentarios por reserva
  *     tags: [Comentarios]
@@ -58,7 +58,7 @@ router.get(
 
 /**
  * @swagger
- * /comentarios:
+ * api/comentarios:
  *   post:
  *     summary: Crear un comentario sobre una reserva
  *     tags: [Comentarios]
@@ -92,7 +92,7 @@ router.post(
 
 /**
  * @swagger
- * /comentarios/{id}:
+ * api/comentarios/{id}:
  *   delete:
  *     summary: Borrado lógico de un comentario
  *     tags: [Comentarios]

@@ -10,25 +10,29 @@ const router = Router();
 
 /**
  * @swagger
- * /reportes/pdf:
+ * /api/reportes/pdf:
  *   get:
  *     tags: [Reportes]
  *     summary: Genera un archivo PDF con las reservas
- *     security: [ { bearerAuth: [] } ]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
- *       200: { description: PDF generado }
+ *       200:
+ *         description: PDF generado correctamente
  */
 router.get('/pdf', requireAuth, soloAdmin, generarReportePDF);
 
 /**
  * @swagger
- * /reportes/csv:
+ * /api/reportes/csv:
  *   get:
  *     tags: [Reportes]
  *     summary: Genera un archivo CSV con las reservas
- *     security: [ { bearerAuth: [] } ]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
- *       200: { description: CSV generado }
+ *       200:
+ *         description: CSV generado correctamente
  */
 router.get('/csv', requireAuth, soloAdmin, generarReporteCSV);
 

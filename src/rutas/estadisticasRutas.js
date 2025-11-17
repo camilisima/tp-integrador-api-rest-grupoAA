@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @swagger
- * /estadisticas:
+ * /api/estadisticas:
  *   get:
  *     summary: Obtener estadísticas mensuales de reservas
  *     tags: [Estadísticas]
@@ -16,7 +16,8 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Lista de estadísticas
- */
+
+*/
 router.get('/', requireAuth, soloAdmin, estadisticasControlador.getEstadisticas);
 router.get('/por-salon', requireAuth, soloAdmin, estadisticasControlador.reservasPorSalon);
 router.get('/por-dia', requireAuth, soloAdmin, estadisticasControlador.reservasPorDia);
