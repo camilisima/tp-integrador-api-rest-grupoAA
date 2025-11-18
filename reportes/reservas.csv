@@ -1,4 +1,0 @@
-"reserva_id","fecha_reserva","importe_salon","importe_total","cliente","cliente_apellido","salon","hora_desde","hora_hasta"
-3,"2025-10-08T03:00:00.000Z",,"500000.00","Pamela","Gómez","Secundario","12:00:00","14:00:00"
-2,"2025-10-08T03:00:00.000Z",,"100000.00","Alberto","López","Secundario","12:00:00","14:00:00"
-1,"2025-10-08T03:00:00.000Z",,"200000.00","Alberto","López","Principal","12:00:00","14:00:00"
