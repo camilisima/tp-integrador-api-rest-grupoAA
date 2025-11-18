@@ -1,6 +1,6 @@
 import pool from './basededatos.js';
 
-// Comentarios por reserva
+//Comentarios por reserva
 export const findByReserva = async (reserva_id) => {
   const [rows] = await pool.query(
     `SELECT c.*, u.nombre, u.apellido
@@ -13,7 +13,7 @@ export const findByReserva = async (reserva_id) => {
   return rows;
 };
 
-// Crear comentario
+//Crear comentario
 export const insert = async ({ reserva_id, usuario_id, texto }) => {
   const [result] = await pool.query(
     `INSERT INTO comentarios (reserva_id, usuario_id, texto)
@@ -23,7 +23,7 @@ export const insert = async ({ reserva_id, usuario_id, texto }) => {
   return result.insertId;
 };
 
-// Baja lógica
+//Baja logica
 export const softDelete = async (id) => {
   const [result] = await pool.query(
     `UPDATE comentarios
@@ -34,7 +34,7 @@ export const softDelete = async (id) => {
   return result.affectedRows;
 };
 
-// Comentarios activos
+//Comentarios activos
 export const findAllActivos = async () => {
   const [rows] = await pool.query(
     `SELECT c.*, u.nombre, u.apellido, r.reserva_id

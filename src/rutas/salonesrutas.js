@@ -9,14 +9,14 @@ const cache = apicache.middleware;
 
 //validaciones
 
-// Validación de ID
+// validacion de ID
 const validateId = [
   param('id')
     .isInt({ gt: 0 })
     .withMessage('El ID debe ser un entero mayor a 0'),
 ];
 
-// Validación de body para crear/editar salón
+// validacion de body para crear-editar salon
 const validateSalon = [
   body('titulo').notEmpty().withMessage('El título es obligatorio'),
   body('direccion').notEmpty().withMessage('La dirección es obligatoria'),

@@ -1,6 +1,6 @@
 import pool from './basededatos.js';
 
-// Todos los servicios activos
+//Todos los servicios activos
 export const findAll = async () => {
   const [rows] = await pool.query(
     'SELECT * FROM servicios WHERE activo = 1 ORDER BY creado DESC'
@@ -8,7 +8,7 @@ export const findAll = async () => {
   return rows;
 };
 
-// Servicio por ID
+//Servicio por ID
 export const findById = async (id) => {
   const [rows] = await pool.query(
     'SELECT * FROM servicios WHERE servicio_id = ? AND activo = 1',
@@ -17,7 +17,7 @@ export const findById = async (id) => {
   return rows[0];
 };
 
-// Crear servicio
+//Crear servicio
 export const insert = async (servicio) => {
   const { descripcion, importe } = servicio;
 
@@ -34,7 +34,7 @@ export const insert = async (servicio) => {
   return r.insertId;
 };
 
-// Actualizar servicio
+//Actualizar servicio
 export const update = async (id, servicio) => {
   const { descripcion, importe } = servicio;
 
@@ -52,7 +52,7 @@ export const update = async (id, servicio) => {
   return r.affectedRows;
 };
 
-// Baja lógica
+//Baja logica
 export const softDelete = async (id) => {
   const [r] = await pool.query(
     `UPDATE servicios 

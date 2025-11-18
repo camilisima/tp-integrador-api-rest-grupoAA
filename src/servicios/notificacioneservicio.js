@@ -27,7 +27,7 @@ export default class NotificacionesService {
 
   async enviarCorreo({ to, fecha, salon, turno, admin = false }) {
     if (!to) {
-      console.warn("⚠ No se envió correo porque 'to' está vacío.");
+      console.warn("No se envió correo porque 'to' está vacío.");
       return;
     }
 
@@ -44,7 +44,7 @@ export default class NotificacionesService {
       html
     });
 
-    console.log(`📧 Email enviado a ${to} | ID: ${info.messageId}`);
+    console.log(` Email enviado a ${to} | ID: ${info.messageId}`);
     return info;
   }
 }

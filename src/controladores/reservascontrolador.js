@@ -2,7 +2,7 @@ import { validationResult } from 'express-validator';
 import * as reservasSrv from '../servicios/reservasServicios.js';
 
 
-// Cliente: Listar MIS reservas
+//Mis reservas(Cliente)
 
 export const listarMias = async (req, res) => {
   try {
@@ -14,7 +14,7 @@ export const listarMias = async (req, res) => {
   }
 };
 
-// Cliente: Crear reserva
+//Crear reservas(cxliente)
 
 export const crearReservaCliente = async (req, res) => {
   const errors = validationResult(req);
@@ -28,15 +28,15 @@ export const crearReservaCliente = async (req, res) => {
 
     const id = await reservasSrv.crearReservaCliente(payload);
 
-    res.status(201).json({ id, message: 'Reserva creada correctamente' });
+    res.status(201).json({id, message:'Reserva creada correctamente'});
   } catch (e) {
     console.error('Error crearReservaCliente:', e);
-    res.status(500).json({ message: 'Error al crear reserva' });
+    res.status(500).json({message:'Error al crear reserva'});
   }
 };
 
 
-// Empleado/Admin: Listar todas las reservas
+//Lista de todas las reservas(admin y empleado)
 
 export const getReservas = async (_req, res) => {
   try {
@@ -44,12 +44,12 @@ export const getReservas = async (_req, res) => {
     res.json(reservas);
   } catch (e) {
     console.error('Error getReservas:', e);
-    res.status(500).json({ message: 'Error al obtener reservas' });
+    res.status(500).json({message:'Error al obtener reservas'});
   }
 };
 
 
-//  Empleado/Admin: Obtener reserva por ID
+//Reserva por ID (admin y empleado)
 
 export const getReservaById = async (req, res) => {
   try {
@@ -61,12 +61,12 @@ export const getReservaById = async (req, res) => {
     res.json(reserva);
   } catch (e) {
     console.error('Error getReservaById:', e);
-    res.status(500).json({ message: 'Error al buscar reserva' });
+    res.status(500).json({message:'Error al buscar reserva'});
   }
 };
 
 
-// Admin: Actualizar reserva
+//Admin: Actualizar reserva
 
 export const updateReserva = async (req, res) => {
   const errors = validationResult(req);
@@ -76,7 +76,7 @@ export const updateReserva = async (req, res) => {
     const updated = await reservasSrv.updateReserva(req.params.id, req.body);
 
     if (!updated)
-      return res.status(404).json({ message: 'Reserva no encontrada' });
+      return res.status(404).json({message:'Reserva no encontrada'});
 
     res.json({ message: 'Reserva actualizada correctamente' });
   } catch (e) {
@@ -86,18 +86,18 @@ export const updateReserva = async (req, res) => {
 };
 
 
-// Admin: Eliminar (baja lógica)
+//soft delete admin
 
 export const deleteReserva = async (req, res) => {
   try {
     const deleted = await reservasSrv.deleteReserva(req.params.id);
 
     if (!deleted)
-      return res.status(404).json({ message: 'Reserva no encontrada' });
+      return res.status(404).json({message:'Reserva no encontrada'});
 
-    res.json({ message: 'Reserva eliminada correctamente' });
+    res.json({message: 'Reserva eliminada correctamente'});
   } catch (e) {
     console.error('Error deleteReserva:', e);
-    res.status(500).json({ message: 'Error al eliminar reserva' });
+    res.status(500).json({message:'Error al eliminar reserva'});
   }
 };

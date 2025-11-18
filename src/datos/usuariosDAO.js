@@ -1,6 +1,6 @@
 import pool from './basededatos.js';
 
-// Todos los usuarios activos
+//todos los usuarios activos
 export const findAll = async () => {
   const [rows] = await pool.query(
     'SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto, creado, modificado, activo FROM usuarios WHERE activo = 1'
@@ -8,7 +8,7 @@ export const findAll = async () => {
   return rows;
 };
 
-// Un usuario por ID
+//unusuario por ID
 export const findById = async (id) => {
   const [rows] = await pool.query(
     'SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto, creado, modificado, activo FROM usuarios WHERE usuario_id = ? AND activo = 1',
@@ -17,7 +17,7 @@ export const findById = async (id) => {
   return rows[0];
 };
 
-// Clientes 
+//clientes 
 export const findClientes = async () => {
   const [rows] = await pool.query(
     'SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto, creado, modificado, activo FROM usuarios WHERE activo = 1 AND tipo_usuario = 3'
@@ -25,7 +25,7 @@ export const findClientes = async () => {
   return rows;
 };
 
-// Buscar por nombre_usuario (para login)
+//buscar por nombre_usuario
 export const findByNombreUsuario = async (nombre_usuario) => {
   const [rows] = await pool.query(
     'SELECT * FROM usuarios WHERE nombre_usuario = ? AND activo = 1',
@@ -34,7 +34,7 @@ export const findByNombreUsuario = async (nombre_usuario) => {
   return rows[0];
 };
 
-// Crear usuario (bcrypt ya viene hasheado desde servicio)
+//crear usuario
 export const insert = async (usuario) => {
   const {
     nombre,
@@ -65,7 +65,7 @@ export const insert = async (usuario) => {
   return r.insertId;
 };
 
-// Update 
+//updatr 
 export const update = async (id, usuario) => {
   let sql = `
     UPDATE usuarios
@@ -119,7 +119,7 @@ export const update = async (id, usuario) => {
   return r.affectedRows;
 };
 
-// Baja lógica
+//baja logica
 export const softDelete = async (id) => {
   const [r] = await pool.query(
     `UPDATE usuarios 

@@ -8,7 +8,7 @@ export const findAll = async () => {
   return rows;
 };
 
-// Un salón por ID
+// Un salon por ID
 export const findById = async (id) => {
   const [rows] = await pool.query(
     'SELECT * FROM salones WHERE salon_id = ? AND activo = 1',
@@ -17,7 +17,7 @@ export const findById = async (id) => {
   return rows[0];
 };
 
-// Crear salón
+// Crear salon
 export const insert = async (salon) => {
   const { titulo, direccion, latitud, longitud, capacidad, importe } = salon;
 
@@ -38,7 +38,7 @@ export const insert = async (salon) => {
   return result.insertId;
 };
 
-// Actualizar salón
+// Actualizar salon
 export const update = async (id, salon) => {
   const { titulo, direccion, latitud, longitud, capacidad, importe } = salon;
 
@@ -62,7 +62,7 @@ export const update = async (id, salon) => {
   return result.affectedRows;
 };
 
-// Baja lógica
+// Baja logica
 export const softDelete = async (id) => {
   const [result] = await pool.query(
     `UPDATE salones 

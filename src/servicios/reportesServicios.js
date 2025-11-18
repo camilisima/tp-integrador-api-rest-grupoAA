@@ -9,7 +9,7 @@ const ensureReportFolder = () => {
 
   if (!fs.existsSync(rutaCarpeta)) {
     fs.mkdirSync(rutaCarpeta, { recursive: true });
-    console.log('📂 Carpeta /reportes creada automáticamente');
+    console.log('Carpeta /reportes creada automaticamente');
   }
 
   return rutaCarpeta;
@@ -32,7 +32,7 @@ export const generarPDFReservas = async () => {
       .text(`ID Reserva: ${r.reserva_id}`)
       .text(`Fecha: ${r.fecha_reserva}`)
       .text(`Cliente: ${r.cliente} ${r.cliente_apellido}`)
-      .text(`Salón: ${r.salon}`)
+      .text(`Salon: ${r.salon}`)
       .text(`Turno: ${r.hora_desde} - ${r.hora_hasta}`)
       .text(`Importe Total: $${r.importe_total}`)
       .moveDown();

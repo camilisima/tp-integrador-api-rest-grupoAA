@@ -1,6 +1,6 @@
 import pool from './basededatos.js';
 
-// Todos los turnos activos
+//Todos los turnos activos
 export const findAll = async () => {
   const [rows] = await pool.query(
     'SELECT * FROM turnos WHERE activo = 1 ORDER BY orden ASC'
@@ -8,7 +8,7 @@ export const findAll = async () => {
   return rows;
 };
 
-// Turno por ID
+//Turno por ID
 export const findById = async (id) => {
   const [rows] = await pool.query(
     'SELECT * FROM turnos WHERE turno_id = ? AND activo = 1',
@@ -17,7 +17,7 @@ export const findById = async (id) => {
   return rows[0];
 };
 
-// Crear turno
+//Crear turno
 export const insert = async (turno) => {
   const { orden, hora_desde, hora_hasta } = turno;
 
@@ -35,7 +35,7 @@ export const insert = async (turno) => {
   return r.insertId;
 };
 
-// Actualizar turno
+//Actualizar turno
 export const update = async (id, turno) => {
   const { orden, hora_desde, hora_hasta } = turno;
 
@@ -54,7 +54,7 @@ export const update = async (id, turno) => {
   return r.affectedRows;
 };
 
-// Baja lógica
+//Baja logica
 export const softDelete = async (id) => {
   const [r] = await pool.query(
     `UPDATE turnos 

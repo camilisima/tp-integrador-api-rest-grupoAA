@@ -1,16 +1,16 @@
 import * as dao from '../datos/serviciosDAO.js';
 
-// Listar todos los servicios
+//Listar todos los servicios
 export const getAllServicios = async () => {
   return await dao.findAll();
 };
 
-// Servicio por ID
+//Servicio por ID
 export const getServicioById = async (id) => {
   return await dao.findById(id);
 };
 
-// Crear servicio
+//Crear servicio
 export const createServicio = async (data) => {
   const id = await dao.insert(data);
   return id;

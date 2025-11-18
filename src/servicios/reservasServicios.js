@@ -36,7 +36,7 @@ export const crearReservaCliente = async (data) => {
     }
 
   } catch (error) {
-    console.error('⚠ Error al enviar correo:', error.message);
+    console.error('Error al enviar correo:', error.message);
   }
 
   return reservaId;

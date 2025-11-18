@@ -6,7 +6,7 @@ export const getEstadisticas = async (_req, res) => {
     res.json(stats);
   } catch (error) {
     console.error("Error estadísticas:", error);
-    res.status(500).json({ message: "Error al obtener estadísticas" });
+    res.status(500).json({message: "Error al obtener estadisticas" });
   }
 };
 
@@ -16,7 +16,7 @@ export const reservasPorSalon = async (_req, res) => {
     res.json(data);
   } catch (error) {
     console.error("Error reservasPorSalon:", error);
-    res.status(500).json({ message: 'Error al obtener reservas por salón' });
+    res.status(500).json({ message: 'Error al obtener reservas por salon' });
   }
 };
 
@@ -26,7 +26,7 @@ export const reservasPorDia = async (_req, res) => {
     res.json(data);
   } catch (error) {
     console.error("Error reservasPorDia:", error);
-    res.status(500).json({ message: 'Error al obtener reservas por día' });
+    res.status(500).json({message: 'Error al obtener reservas por dia'});
   }
 };
 
@@ -36,7 +36,7 @@ export const porcentajeOcupacion = async (_req, res) => {
     res.json(data);
   } catch (error) {
     console.error("Error porcentajeOcupacion:", error);
-    res.status(500).json({ message: 'Error al obtener porcentaje de ocupación' });
+    res.status(500).json({message:'Error al obtener porcentaje de ocupacion'});
   }
 };
 
